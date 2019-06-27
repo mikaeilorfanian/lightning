@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" type="text/css" href="../static/blog.css">
+  <title>Top 1% Developer</title>
+{% endblock %}
+{% block body %}
+<div class="row">
+  <div class="main">
+    {% for card in home_cards %}
+      <div class="card">
+        <div class="container">
+          <h2>{{ card.title }}</h2>
+          <ul>
+            {% for article in card.articles %}
+              <li><a href='{{ article.link }}'>{{ article.title }}</a>:{{ article.description }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endfor %}
+    
+
+    <div class="card">
+      <div class="container">
+        <h2>Top 1% Creator</h2>
+        <ul>
+          <li><a href="top-coder-technical/types-versus-classes.html">Types versus Classes</a></li>
+          <li><a href='#'>Article 2</a></li>
+          <li><a href='#'>Article 3</a></li>
+          <li><a href='#'>Article 4</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="container">
+        <h2>Top 1% Earner</h2>
+        <ul>
+          <li><a href="top-coder-technical/types-versus-classes.html">Types versus Classes</a></li>
+          <li><a href='#'>Article 2</a></li>
+          <li><a href='#'>Article 3</a></li>
+          <li><a href='#'>Article 4</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <div class="side">
+    <h2>Most Recent</h2>
+    <a href="top-coder-technical/types-versus-classes.html">Types versus Classes</a><br>
+    <a href='#'>Article 2</a><br>
+    <a href='#'>Article 3</a><br>
+    <a href='#'>Article 4</a><br>
+  </div>
+</div>
+{% endblock %}
