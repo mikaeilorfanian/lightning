@@ -1,7 +1,9 @@
+import codecs
 from dataclasses import dataclass
 from typing import List
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+import markdown
 
 
 env = Environment(
@@ -78,7 +80,32 @@ with open('pages/technical-articles.html', 'w') as f:
 
 @dataclass
 class Article:
+    title: str
+    body: str
 
 
 in_file = 'articles/self-driving-vehicle.md'
+out_file = 'articles/self-driving-vehicle-out.html'
+extensions = ['codehilite']
+markdown.markdownFromFile(input=in_file, extensions=extensions, output=out_file, encoding='utf-8')
+out_file_handle = codecs.open(out_file, mode='r', encoding='utf-8')
+body = out_file_handle.read()
+print(body[:100])
+out_file_handle.close()
+article = Article(title='Types versus Classes', body=body)
+article_template = env.get_template('article-template.html')
+intro = NavbarItem(title='Intro', link='../home.html')
+technical = NavbarItem(title='Technical', link='../technical-articles.html')
+employment = NavbarItem(title='Employment')
+navbar_items = (intro, technical, employment)
+rendered_tempalte = article_template.render(
+    article=article, 
+    navbar_items=navbar_items,
+)
+with open('pages/technical/types-versus-classes.html', 'w', encoding='utf-8') as f:
     f.write(rendered_tempalte)
+
+#TODO: look at the types-versus-classes page open in the browser
+# it's missing the picture of the blog
+# it looks like it wasn't rendered properly many things are missing
+# also, the body of the article seems to be a repr of the codecs.open function!!
