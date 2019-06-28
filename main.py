@@ -17,9 +17,6 @@ class NavbarItem:
     title: str
     link: str = '#'
 
-    # def __post_init__(self):
-    #     self.link = 'pages/' + self.link
-
 
 @dataclass
 class ArticleSummary:
@@ -37,45 +34,60 @@ class HomeCard:
     title: str
     articles: List[ArticleSummary]
 
-# TODO: filenames "home.html" should be turned into variables
-intro = NavbarItem(title='Intro', link='home.html')
-technical = NavbarItem(title='Technical', link='technical-articles.html')
-employment = NavbarItem(title='Employment')
-navbar_items = (intro, technical, employment)
+
+def generate_index_page():
+    # TODO: filenames "index.html" should be turned into variables
+    intro = NavbarItem(title='Home', link='index.html')
+    technical = NavbarItem(title='Technical', link='pages/technical-articles.html')
+    employment = NavbarItem(title='Employment')
+    index_navbar_items = (intro, technical, employment)
+
+    article1 = ArticleSummary(
+        title='Types versus Classes', 
+        description='The type of an object differs from its class and OOP relies a lot on this difference!',
+        link='types-versus-classes.html',
+        category='technical',
+    )
+    coder_card = HomeCard(title='Top 1% coder', articles=[article1])
+    
+    home_template = env.get_template('home2-template.html')
+    rendered_tempalte = home_template.render(
+        navbar_items=index_navbar_items, 
+        home_cards=[coder_card],
+        header_link='index.html',
+    )
+    with open('index.html', 'w') as f:
+        f.write(rendered_tempalte)
+generate_index_page()
 
 
-article1 = ArticleSummary(
-    title='Types versus Classes', 
-    description='The type of an object differs from its class and OOP relies a lot on this difference!',
-    link='types-versus-classes.html',
-    category='technical',
-)
-coder_card = HomeCard(title='Top 1% coder', articles=[article1])
-home_template = env.get_template('home2-template.html')
-rendered_tempalte = home_template.render(
-    navbar_items=navbar_items, 
-    home_cards=[coder_card],
-)
-with open('pages/home.html', 'w') as f:
-    f.write(rendered_tempalte)
+def generate_technical_articles_page():
+    # TODO: filenames "index.html" should be turned into variables
+    intro = NavbarItem(title='Home', link='../index.html')
+    technical = NavbarItem(title='Technical', link='technical-articles.html')
+    employment = NavbarItem(title='Employment')
+    article_category_navbar_items = (intro, technical, employment)
 
-# TODO: where do these strings (title, desc, link, etc.) come from so 
-# they're not hard coded
-article1 = ArticleSummary(
-    title='Types versus Classes', 
-    description='The type of an object differs from its class and OOP relies a lot on this difference!',
-    link='types-versus-classes.html',
-    category='technical',
-)
-latest_article = article1
-technical_articles_template = env.get_template('technical-articles-template.html')
-rendered_tempalte = technical_articles_template.render(
-    navbar_items=navbar_items, 
-    technical_articles=[article1],
-    latest_article=latest_article,
-)
-with open('pages/technical-articles.html', 'w') as f:
-    f.write(rendered_tempalte)
+    # TODO: where do these strings (title, desc, link, etc.) come from so 
+    # they're not hard coded
+    article1 = ArticleSummary(
+        title='Types versus Classes', 
+        description='The type of an object differs from its class and OOP relies a lot on this difference!',
+        link='types-versus-classes.html',
+        category='technical',
+    )
+    latest_article = article1
+
+    technical_articles_template = env.get_template('technical-articles-template.html')
+    rendered_tempalte = technical_articles_template.render(
+        navbar_items=article_category_navbar_items, 
+        technical_articles=[article1],
+        latest_article=latest_article,
+        header_link='../index.html',
+    )
+    with open('pages/technical-articles.html', 'w') as f:
+        f.write(rendered_tempalte)
+generate_technical_articles_page()
 
 
 @dataclass
@@ -84,28 +96,29 @@ class Article:
     body: str
 
 
-in_file = 'articles/self-driving-vehicle.md'
-out_file = 'articles/self-driving-vehicle-out.html'
-extensions = ['codehilite']
-markdown.markdownFromFile(input=in_file, extensions=extensions, output=out_file, encoding='utf-8')
-out_file_handle = codecs.open(out_file, mode='r', encoding='utf-8')
-body = out_file_handle.read()
-print(body[:100])
-out_file_handle.close()
-article = Article(title='Types versus Classes', body=body)
-article_template = env.get_template('article-template.html')
-intro = NavbarItem(title='Intro', link='../home.html')
-technical = NavbarItem(title='Technical', link='../technical-articles.html')
-employment = NavbarItem(title='Employment')
-navbar_items = (intro, technical, employment)
-rendered_tempalte = article_template.render(
-    article=article, 
-    navbar_items=navbar_items,
-)
-with open('pages/technical/types-versus-classes.html', 'w', encoding='utf-8') as f:
-    f.write(rendered_tempalte)
+def generate_article():
+    in_file = 'articles/self-driving-vehicle.md'
+    out_file = 'articles/self-driving-vehicle-out.html'
+    extensions = ['codehilite']
+    markdown.markdownFromFile(input=in_file, extensions=extensions, output=out_file, encoding='utf-8')
 
-#TODO: look at the types-versus-classes page open in the browser
-# it's missing the picture of the blog
-# it looks like it wasn't rendered properly many things are missing
-# also, the body of the article seems to be a repr of the codecs.open function!!
+    out_file_handle = codecs.open(out_file, mode='r', encoding='utf-8')
+    body = out_file_handle.read()
+    out_file_handle.close()
+
+    intro = NavbarItem(title='Intro', link='../../index.html')
+    technical = NavbarItem(title='Technical', link='../technical-articles.html')
+    employment = NavbarItem(title='Employment')
+    article_navbar_items = (intro, technical, employment)
+    
+    article = Article(title='Types versus Classes', body=body)
+
+    article_template = env.get_template('article-template.html')
+    rendered_tempalte = article_template.render(
+        article=article, 
+        navbar_items=article_navbar_items,
+        header_link='../../index.html',
+    )
+    with open('pages/technical/types-versus-classes.html', 'w', encoding='utf-8') as f:
+        f.write(rendered_tempalte)
+generate_article()
