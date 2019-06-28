@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block head %}
 {{ super() }}
-<title>Top 1% Developer</title>
+<title>Top 1% Coder</title>
 <style>
 * {
   box-sizing: border-box;
@@ -65,7 +65,8 @@ body {
 .side {
   flex: 30%;
   background-color: #f1f1f1;
-  padding: 20px;
+  padding-left: 20px;
+  font-size: 15px;
 }
 
 /* Main column */
@@ -127,10 +128,10 @@ body {
   <div class="main">
       <div class="card">
         <div class="container">
-          <h2>Tope 1% Code: Technical Articles</h2>
-          <h3>Latest: <a href="top-coder-technical/types-versus-classes.html">Types vs. Classes</a></h3>
+          <h2>Top 1% Code: Technical Articles</h2>
+          <h3>Latest: <a href="{{ latest_article.link }}">{{ latest_article.title }}</a>:{{ latest_article.description }}</h3>
           <ul>
-            {% for article in articles %}
+            {% for article in technical_articles %}
               <li><a href='{{ article.link }}'>{{ article.title }}</a>:{{ article.description }}</li>
             {% endfor %}
           </ul>
@@ -153,7 +154,7 @@ body {
   </div>
 
   <div class="side">
-    <h2>Popular Articles</h2>
+    <h2>Popular</h2>
     <ul>
       <li><a href='#'>Article 1</a></li>
       <li><a href='#'>Article 2</a></li>

@@ -36,7 +36,7 @@ class HomeCard:
 
 
 intro = NavbarItem(title='Intro', link='home.html')
-technical = NavbarItem(title='Technical', link='technical-articles-list.html')
+technical = NavbarItem(title='Technical', link='technical-articles.html')
 employment = NavbarItem(title='Employment')
 navbar_items = (intro, technical, employment)
 
@@ -57,22 +57,21 @@ article1 = HomeArticle(
     title='Types versus Classes', 
     description='The type of an object differs from its class and OOP relies a lot on this difference!',
     link='types-versus-classes.html',
-    category='top-coder-technical',
+    category='technical',
 )
 latest_article = article1
-technical_articles_template = env.get_template('technical-articles-list-template.html')
+technical_articles_template = env.get_template('technical-articles-template.html')
 rendered_tempalte = technical_articles_template.render(
     navbar_items=navbar_items, 
-    technical_articles=[article1], 
-    latest_article=latest_article
+    technical_articles=[article1],
+    latest_article=latest_article,
 )
-
-with open('pages/technical-articles-list.html', 'w') as f:
+with open('pages/technical-articles.html', 'w') as f:
     f.write(rendered_tempalte)
 
 
-technical_articles_template = env.get_template('technical-articles-list-template.html')
-rendered_tempalte = technical_articles_template.render(navbar_items=navbar_items)
+@dataclass
+class Article:
 
-with open('pages/technical-articles-list.html', 'w') as f:
+in_file = 'articles/self-driving-vehicle.md'
     f.write(rendered_tempalte)
