@@ -19,7 +19,7 @@ class NavbarItem:
 
 
 @dataclass
-class HomeArticle:
+class ArticleSummary:
     title: str
     description: str
     link: str
@@ -32,7 +32,7 @@ class HomeArticle:
 @dataclass
 class HomeCard:
     title: str
-    articles: List[HomeArticle]
+    articles: List[ArticleSummary]
 
 
 intro = NavbarItem(title='Intro', link='home.html')
@@ -40,7 +40,8 @@ technical = NavbarItem(title='Technical', link='technical-articles.html')
 employment = NavbarItem(title='Employment')
 navbar_items = (intro, technical, employment)
 
-article1 = HomeArticle(
+
+article1 = ArticleSummary(
     title='Types versus Classes', 
     description='The type of an object differs from its class and OOP relies a lot on this difference!',
     link='types-versus-classes.html',
@@ -52,8 +53,9 @@ rendered_tempalte = home_template.render(navbar_items=navbar_items, home_cards=[
 with open('pages/home.html', 'w') as f:
     f.write(rendered_tempalte)
 
-
-article1 = HomeArticle(
+# TODO: where do these strings (title, desc, link, etc.) come from so 
+# they're not hard coded
+article1 = ArticleSummary(
     title='Types versus Classes', 
     description='The type of an object differs from its class and OOP relies a lot on this difference!',
     link='types-versus-classes.html',
