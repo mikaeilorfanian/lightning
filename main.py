@@ -9,6 +9,7 @@ env = Environment(
     autoescape=select_autoescape(['html', 'xml'])
 )
 
+
 @dataclass
 class NavbarItem:
     title: str
@@ -49,7 +50,10 @@ article1 = ArticleSummary(
 )
 coder_card = HomeCard(title='Top 1% coder', articles=[article1])
 home_template = env.get_template('home2-template.html')
-rendered_tempalte = home_template.render(navbar_items=navbar_items, home_cards=[coder_card])
+rendered_tempalte = home_template.render(
+    navbar_items=navbar_items, 
+    home_cards=[coder_card],
+)
 with open('pages/home.html', 'w') as f:
     f.write(rendered_tempalte)
 
@@ -74,6 +78,7 @@ with open('pages/technical-articles.html', 'w') as f:
 
 @dataclass
 class Article:
+
 
 in_file = 'articles/self-driving-vehicle.md'
     f.write(rendered_tempalte)
