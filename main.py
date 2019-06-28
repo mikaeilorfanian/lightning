@@ -37,7 +37,7 @@ class HomeCard:
     title: str
     articles: List[ArticleSummary]
 
-
+# TODO: filenames "home.html" should be turned into variables
 intro = NavbarItem(title='Intro', link='home.html')
 technical = NavbarItem(title='Technical', link='technical-articles.html')
 employment = NavbarItem(title='Employment')
@@ -48,7 +48,7 @@ article1 = ArticleSummary(
     title='Types versus Classes', 
     description='The type of an object differs from its class and OOP relies a lot on this difference!',
     link='types-versus-classes.html',
-    category='top-coder-technical',
+    category='technical',
 )
 coder_card = HomeCard(title='Top 1% coder', articles=[article1])
 home_template = env.get_template('home2-template.html')
