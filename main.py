@@ -27,7 +27,7 @@ class ArticleSummary:
     link: str
     category: str
     publication_date: str
-    popular: bool=False
+    popularity: int = 0
 
     def __post_init__(self):
         self.link = self.category + '/' + self.link
@@ -114,7 +114,6 @@ def generate_article():
     md.convertFile(kwargs.get('input', None),
                    kwargs.get('output', None),
                    kwargs.get('encoding', None))
-    print(md.Meta)
 
     out_file_handle = codecs.open(out_file, mode='r', encoding='utf-8')
     body = out_file_handle.read()
@@ -136,6 +135,8 @@ def generate_article():
     with open('pages/technical/types-versus-classes.html', 'w', encoding='utf-8') as f:
         f.write(rendered_tempalte)
 generate_article()
+print('\n')
+print('\n')
 
 
 def find_articles():
@@ -165,6 +166,7 @@ def make_article_summary_from_article_metadata(meta_data):
         link=meta_data['page_name'][0],
         category=meta_data['category'][0],
         publication_date=meta_data['publication_date'][0],
+        popularity=meta_data['popularity'][0],
     )
 
 def find_latest_article():
@@ -175,9 +177,22 @@ def find_latest_article():
         for mtdata in metadata
     ]
     articles.sort(key=lambda article: article.publication_date, reverse=True)
-    print(articles)
 find_latest_article()
 
 
-def find_popular():
-    pass
+def find_popular_articles(top_x: int, category: str=None):
+    md_files  = find_articles()
+    metadata = get_articles_metadata(md_files)
+    articles = [
+        make_article_summary_from_article_metadata(mtdata)
+        for mtdata in metadata
+    ]
+
+    if category:
+        articles = [article for article in articles if article.category == category]
+
+    articles.sort(key=lambda article: article.popularity, reverse=True)
+    
+    return articles[:top_x]
+popular_articles = find_popular_articles(2, 'technical')
+print(popular_articles)
