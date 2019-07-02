@@ -38,16 +38,20 @@ An object can have multiple interfaces. For example, in the following snippet we
 
     :::python
     class Car:
-        def start(self):  # required for Vehicle type
+        def start(self):  
+            # required for Vehicle type
             pass
     
-        def drive(self, destination: str):  # required for Vehicle type
+        def drive(self, destination: str):  
+            # required for Vehicle type
             pass
     
-        def __iter__(self):  # required for Iterator type
+        def __iter__(self):  
+            # required for Iterator type
             pass
     
-        def __next__(self):   # required for Iterator type
+        def __next__(self):   
+            # required for Iterator type
             pass
     
     car = Car()
@@ -84,9 +88,12 @@ To illustrate this, let’s step through the below block of code using the pytho
             pass
     
     def call_some_methods(obj: A):
-        import pdb; pdb.set_trace()  # this is like a breakpoint
+        # this is like a breakpoint
+        import pdb; pdb.set_trace()  
         obj.just_do_it()
-        obj.cant_do_it()  # we're calling a non-existing method here
+
+        # let's call a non-existing method
+        obj.blah()   
     
     a = A()
     call_some_methods(a)
@@ -105,19 +112,19 @@ Let’s execute the next line of code:
     :::bash
     (Pdb) next
     > tvsclsdbg.py(8)call_some_methods()
-    -> obj.cant_do_it()
+    -> obj.blah()
     (Pdb)
 
-Python ran `obj.just_do_it()` and still no errors were thrown. Finally, we try to call the non-existing `cant_do_it()` method:   
+Python ran `obj.just_do_it()` and still no errors were thrown. Finally, we try to call the non-existing `blah()` method:   
 
     :::bash
     (Pdb) next
-    AttributeError: 'A' object has no attribute 'cant_do_it'
+    AttributeError: 'A' object has no attribute 'blah'
     > tvsclsdbg.py(8)call_some_methods()
-    -> obj.cant_do_it()
+    -> obj.blah()
     (Pdb)
 
-And we crashed as we tried to invoke the non-existing method. This is what duck-typing means. The methods and attributes you call are not resolved until you execute the line that makes those calls. You might be wondering why this is a big deal? Read on.   
+And we crashed as we tried to invoke the non-existing method. This is what duck-typing means. The methods and attributes you call are not resolved until you execute the line that makes those calls. You might be wondering why this is a big deal. Read on.   
 
 ## Duck-typing Makes Code User-friendly
 It is a well-known principle of object oriented programming that relying on interfaces is better than relying on implementation (more on this later). Duck-typing allows you to take this idea to an extreme because the compiler and interpreter don’t care about the class of objects you pass around in your program! As a result you can write code that’s powerful yet user friendly.   
@@ -139,11 +146,15 @@ Although the Python language always relies on interfaces that doesn’t stop us 
                 raise CarNotOnError
     
     car = Car()
-    if car.engine == 'on':  # relies on implementation
-        car._drive_to(destination)  # relies on implementation
+    # relies on implementation
+    if car.engine == 'on':  
+        # relies on implementation
+        car._drive_to(destination)  
     else:
-        car.engine = 'on'  # relies on implementation
-        car._drive_to(destination)   # relies on implementation
+        # relies on implementation
+        car.engine = 'on'  
+        # relies on implementation
+        car._drive_to(destination)   
 
 The code that uses an instance of the car object has knowledge of the following implementation details about it:   
 - car has an engine attribute.   
