@@ -138,12 +138,14 @@ def generate_article():
 generate_article()
 
 
-def find_latest_article():
-    md_files  = [f for f in glob.glob('articles/*.md')]
+def find_articles():
+    return [f for f in glob.glob('articles/*.md')]
+
+
+def get_articles_metadata(filenames):
     metadata = []
-    articles = []
-    
-    for f in md_files:
+
+    for f in filenames:
         in_file = 'articles/self-driving-vehicle.md'
         extensions = ['codehilite', 'meta']
         kwargs = dict(input=f, extensions=extensions, encoding='utf-8')
@@ -153,16 +155,29 @@ def find_latest_article():
                     kwargs.get('encoding', None))
         metadata.append(md.Meta)
 
-    for mtdata in metadata:
-        articles.append(ArticleSummary(
-            title=mtdata['title'][0], 
-            description=mtdata['description'][0],
-            link=mtdata['page_name'][0],
-            category=mtdata['category'][0],
-            publication_date=mtdata['publication_date'][0],
-            )
-        )
-        
+    return metadata
 
+
+def make_article_summary_from_article_metadata(meta_data):
+    return ArticleSummary(
+        title=meta_data['title'][0], 
+        description=meta_data['description'][0],
+        link=meta_data['page_name'][0],
+        category=meta_data['category'][0],
+        publication_date=meta_data['publication_date'][0],
+    )
+
+def find_latest_article():
+    md_files  = find_articles()
+    metadata = get_articles_metadata(md_files)
+    articles = [
+        make_article_summary_from_article_metadata(mtdata)
+        for mtdata in metadata
+    ]
     articles.sort(key=lambda article: article.publication_date, reverse=True)
+    print(articles)
 find_latest_article()
+
+
+def find_popular():
+    pass
