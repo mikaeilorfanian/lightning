@@ -157,7 +157,7 @@ def render_articles_and_get_their_metadata(filenames):
     return metadata
 
 
-def make_article_summary_from_article_metadata(meta_data):
+def make_article_summary_obj_from_article_metadata(meta_data):
     return ArticleSummary(
         title=meta_data['title'][0], 
         description=meta_data['description'][0],
@@ -171,7 +171,7 @@ def find_latest_article():
     md_files  = find_article_files()
     metadata = render_articles_and_get_their_metadata(md_files)
     articles = [
-        make_article_summary_from_article_metadata(mtdata)
+        make_article_summary_obj_from_article_metadata(mtdata)
         for mtdata in metadata
     ]
     articles.sort(key=lambda article: article.publication_date, reverse=True)
@@ -182,7 +182,7 @@ def find_popular_articles(top_x: int, category: str=None):
     md_files  = find_article_files()
     metadata = render_articles_and_get_their_metadata(md_files)
     articles = [
-        make_article_summary_from_article_metadata(mtdata)
+        make_article_summary_obj_from_article_metadata(mtdata)
         for mtdata in metadata
     ]
 
