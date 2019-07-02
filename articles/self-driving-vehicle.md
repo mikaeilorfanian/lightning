@@ -1,7 +1,10 @@
 ---
 title: Types versus Classes
-publication date: 02-07-2019
+description: The type of an object differs from its class and OOP relies a lot on this difference!
+page_name: types-versus-classes.html
+publication_date: 02-07-2019
 category: technical
+popularity: 2
 ---
 # Types versus Classes
 - Programming to interfaces or types is better than programming to implementation or classes.
