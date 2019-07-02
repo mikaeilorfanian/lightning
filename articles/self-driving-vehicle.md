@@ -1,3 +1,8 @@
+---
+title: Types versus Classes
+publication date: 02-07-2019
+category: technical
+---
 # Types versus Classes
 - Programming to interfaces or types is better than programming to implementation or classes.
 - Some programming languages use “duck-typing” not “duck-classing”.

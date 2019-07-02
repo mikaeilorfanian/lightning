@@ -99,8 +99,15 @@ class Article:
 def generate_article():
     in_file = 'articles/self-driving-vehicle.md'
     out_file = 'articles/self-driving-vehicle-out.html'
-    extensions = ['codehilite']
-    markdown.markdownFromFile(input=in_file, extensions=extensions, output=out_file, encoding='utf-8')
+    extensions = ['codehilite', 'meta']
+    # markdown.markdownFromFile(input=in_file, extensions=extensions, output=out_file, encoding='utf-8')
+    kwargs = dict(input=in_file, extensions=extensions, output=out_file, encoding='utf-8')
+
+    md = markdown.Markdown(**kwargs)
+    md.convertFile(kwargs.get('input', None),
+                   kwargs.get('output', None),
+                   kwargs.get('encoding', None))
+    print(md.Meta)
 
     out_file_handle = codecs.open(out_file, mode='r', encoding='utf-8')
     body = out_file_handle.read()
