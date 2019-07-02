@@ -1,5 +1,7 @@
 import codecs
 from dataclasses import dataclass
+from datetime import datetime
+import glob
 from typing import List
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -24,9 +26,12 @@ class ArticleSummary:
     description: str
     link: str
     category: str
+    publication_date: str
+    popular: bool=False
 
     def __post_init__(self):
         self.link = self.category + '/' + self.link
+        self.publication_date = datetime.strptime(self.publication_date, '%d-%m-%Y')
 
 
 @dataclass
@@ -47,6 +52,7 @@ def generate_index_page():
         description='The type of an object differs from its class and OOP relies a lot on this difference!',
         link='types-versus-classes.html',
         category='technical',
+        publication_date='02-07-2019',
     )
     coder_card = HomeCard(title='Top 1% coder', articles=[article1])
     
@@ -75,6 +81,7 @@ def generate_technical_articles_page():
         description='The type of an object differs from its class and OOP relies a lot on this difference!',
         link='types-versus-classes.html',
         category='technical',
+        publication_date='02-07-2019',
     )
     latest_article = article1
 
@@ -129,3 +136,33 @@ def generate_article():
     with open('pages/technical/types-versus-classes.html', 'w', encoding='utf-8') as f:
         f.write(rendered_tempalte)
 generate_article()
+
+
+def find_latest_article():
+    md_files  = [f for f in glob.glob('articles/*.md')]
+    metadata = []
+    articles = []
+    
+    for f in md_files:
+        in_file = 'articles/self-driving-vehicle.md'
+        extensions = ['codehilite', 'meta']
+        kwargs = dict(input=f, extensions=extensions, encoding='utf-8')
+        md = markdown.Markdown(**kwargs)
+        md.convertFile(kwargs.get('input', None),
+                    kwargs.get('output', None),
+                    kwargs.get('encoding', None))
+        metadata.append(md.Meta)
+
+    for mtdata in metadata:
+        articles.append(ArticleSummary(
+            title=mtdata['title'][0], 
+            description=mtdata['description'][0],
+            link=mtdata['page_name'][0],
+            category=mtdata['category'][0],
+            publication_date=mtdata['publication_date'][0],
+            )
+        )
+        
+
+    articles.sort(key=lambda article: article.publication_date, reverse=True)
+find_latest_article()
