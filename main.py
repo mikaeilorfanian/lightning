@@ -135,8 +135,6 @@ def generate_article():
     with open('pages/technical/types-versus-classes.html', 'w', encoding='utf-8') as f:
         f.write(rendered_tempalte)
 generate_article()
-print('\n')
-print('\n')
 
 
 def find_article_files():
@@ -195,4 +193,3 @@ def find_popular_articles(top_x: int, category: str=None):
     
     return articles[:top_x]
 popular_articles = find_popular_articles(2, 'technical')
-print(popular_articles)
