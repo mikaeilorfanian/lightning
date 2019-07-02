@@ -139,14 +139,14 @@ print('\n')
 print('\n')
 
 
-def find_articles():
+def find_article_files():
     return [f for f in glob.glob('articles/*.md')]
 
 
 def get_articles_metadata(filenames):
     metadata = []
 
-    for f in filenames:
+    for in_file in filenames:
         in_file = 'articles/self-driving-vehicle.md'
         extensions = ['codehilite', 'meta']
         kwargs = dict(input=f, extensions=extensions, encoding='utf-8')
@@ -170,7 +170,7 @@ def make_article_summary_from_article_metadata(meta_data):
     )
 
 def find_latest_article():
-    md_files  = find_articles()
+    md_files  = find_article_files()
     metadata = get_articles_metadata(md_files)
     articles = [
         make_article_summary_from_article_metadata(mtdata)
@@ -181,7 +181,7 @@ find_latest_article()
 
 
 def find_popular_articles(top_x: int, category: str=None):
-    md_files  = find_articles()
+    md_files  = find_article_files()
     metadata = get_articles_metadata(md_files)
     articles = [
         make_article_summary_from_article_metadata(mtdata)
