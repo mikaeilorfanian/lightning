@@ -130,7 +130,7 @@ body {
       <div class="card">
         <div class="container">
           <h2>Top 1% Code: Technical Articles</h2>
-          <h3>Latest: <a href="{{ latest_article.link }}">{{ latest_article.title }}</a>:{{ latest_article.description }}</h3>
+          <h3>Featured: <a href="{{ featured_article.link }}">{{ featured_article.title }}</a>:{{ featured_article.description }}</h3>
           <ul>
             {% for article in technical_articles %}
               <li><a href='{{ article.link }}'>{{ article.title }}</a>:{{ article.description }}</li>
