@@ -71,6 +71,19 @@
             margin-inline-start: 40px;
             margin-inline-end: 40px;
         }
+        .subscribe-comment-bubble {
+          position:relative;
+          padding:5px;
+          margin:15px;
+          color:#333;
+          background:rgb(205, 255, 180);
+          /* css3 */
+          -webkit-border-radius:10px;
+          -moz-border-radius:10px;
+          border-radius:10px;
+        }
+
+        .subscribe-comment-bubble p {font-size:18px; line-height:1.25em;}
         </style>
 {% endblock %}
 {% block body %}
@@ -80,7 +93,13 @@
             <article>
                 {{article.body|safe}}
             </article>
+            <br>
         </div>
+          <div class="subscribe-comment-bubble">
+            <p>
+              Did you like the article? Leave a comment below and <a href='http://eepurl.com/gwvyCT'><strong>subscribe</strong></a> to receive new articles in your mail box!
+            </p>
+          </div>
     </div>
 </div>
 {% endblock %}
