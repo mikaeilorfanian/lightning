@@ -28,9 +28,13 @@ class ArticleSummary:
     category: str
     publication_date: str
     popularity: int = 0
+    root: str = None
 
     def __post_init__(self):
-        self.link = self.category + '/' + self.link
+        if self.root:
+            self.link = self.root + '/' + self.category + '/' + self.link
+        else:
+            self.link = self.category + '/' + self.link
         self.publication_date = datetime.strptime(self.publication_date, '%d-%m-%Y')
 
 
@@ -50,6 +54,7 @@ def generate_index_page():
     article1 = ArticleSummary(
         title='Types versus Classes', 
         description='The type of an object differs from its class and OOP relies a lot on this difference!',
+        root='pages',
         link='types-versus-classes.html',
         category='technical',
         publication_date='02-07-2019',
