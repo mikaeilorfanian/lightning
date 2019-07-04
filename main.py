@@ -43,18 +43,19 @@ def generate_navbar_items(current_page: str):
 
 
 def generate_index_page():
-    article1 = ArticleSummary(
-        title='Types versus Classes', 
-        description='The type of an object differs from its class and OOP relies a lot on this difference!',
-        root='pages',
-        link='types-versus-classes.html',
-        category='technical',
-        publication_date='02-07-2019',
-        source_file='self-driving-vehicle.md',
-    )
-    coder_card = HomeCard(title='Top 1% coder', articles=[article1])
+    # articles = find_latest_articles()
+    # print(articles)
+    # article1 = ArticleSummary(
+    #     title='Types versus Classes', 
+    #     description='The type of an object differs from its class and OOP relies a lot on this difference!',
+    #     link='types-versus-classes.html',
+    #     category='technical',
+    #     publication_date='02-07-2019',
+    #     source_file='self-driving-vehicle.md',
+    # )
+    coder_card = HomeCard(title='Top 1% coder', articles=articles)
     
-    home_template = env.get_template('home2-template.html')
+    home_template = env.get_template('home-template.html')
     rendered_tempalte = home_template.render(
         navbar_items=generate_navbar_items('home'), 
         home_cards=[coder_card],

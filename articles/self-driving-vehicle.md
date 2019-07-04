@@ -1,9 +1,9 @@
 ---
 title: Types versus Classes
 description: The type of an object differs from its class and OOP relies a lot on this difference!
-page_name: types-versus-classes.html
 publication_date: 02-07-2019
 category: technical
+link: {url}/pages/{category}/types-versus-classes.html
 popularity: 2
 ---
 # Types versus Classes

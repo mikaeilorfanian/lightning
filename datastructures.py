@@ -36,13 +36,8 @@ class ArticleSummary:
     publication_date: str
     source_file: str
     popularity: int = 0
-    root: str = None
 
     def __post_init__(self):
-        if self.root:
-            self.link = self.root + '/' + self.category + '/' + self.link
-        else:
-            self.link = self.category + '/' + self.link
         self.publication_date = datetime.strptime(self.publication_date, '%d-%m-%Y')
 
 
@@ -71,6 +66,7 @@ class Articles:
 
     def render_markdown_files(self):
         for in_file in self.markdown_files:
+            print(in_file)
             extensions = ['codehilite', 'meta']
             kwargs = dict(
                 input=in_file, 
@@ -88,7 +84,10 @@ class Articles:
             self.summaries.append(ArticleSummary(
                 title=md.Meta['title'][0], 
                 description=md.Meta['description'][0],
-                link=md.Meta['page_name'][0],
+                link=md.Meta['link'][0].format(
+                    url='file:///C:/Users/mokt/dev/blog',
+                    category=md.Meta['category'][0],
+                ),
                 category=md.Meta['category'][0],
                 publication_date=md.Meta['publication_date'][0],
                 popularity=md.Meta['popularity'][0],
