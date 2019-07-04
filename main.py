@@ -43,13 +43,6 @@ def generate_navbar_items(current_page: str):
 
 
 def generate_index_page():
-    # TODO: filenames "index.html" should be turned into variables
-    # intro = NavbarItem(title='Home', link='index.html')
-    # technical = NavbarItem(title='Technical', link='pages/technical-articles.html')
-    # employment = NavbarItem(title='Employment')
-    # index_navbar_items = (intro, technical, employment)
-    index_navbar_items = generate_navbar_items('home')
-
     article1 = ArticleSummary(
         title='Types versus Classes', 
         description='The type of an object differs from its class and OOP relies a lot on this difference!',
@@ -63,7 +56,7 @@ def generate_index_page():
     
     home_template = env.get_template('home2-template.html')
     rendered_tempalte = home_template.render(
-        navbar_items=index_navbar_items, 
+        navbar_items=generate_navbar_items('home'), 
         home_cards=[coder_card],
         header_link='index.html',
     )
@@ -73,14 +66,6 @@ generate_index_page()
 
 
 def generate_technical_articles_page():
-    # TODO: filenames "index.html" should be turned into variables
-    # intro = NavbarItem(title='Home', link='../index.html')
-    # technical = NavbarItem(title='Technical', link='technical-articles.html')
-    # employment = NavbarItem(title='Employment')
-    article_category_navbar_items = generate_navbar_items('category')
-
-    # TODO: where do these strings (title, desc, link, etc.) come from so 
-    # they're not hard coded
     article1 = ArticleSummary(
         title='Types versus Classes', 
         description='The type of an object differs from its class and OOP relies a lot on this difference!',
@@ -93,7 +78,7 @@ def generate_technical_articles_page():
 
     technical_articles_template = env.get_template('technical-articles-template.html')
     rendered_tempalte = technical_articles_template.render(
-        navbar_items=article_category_navbar_items, 
+        navbar_items=generate_navbar_items('category'), 
         technical_articles=[article1],
         featured_article=featured_article,
         header_link='../index.html',
@@ -104,32 +89,17 @@ generate_technical_articles_page()
 
 
 def generate_article():
-    # in_file = 'articles/self-driving-vehicle.md'
     out_file = 'articles/self-driving-vehicle.html'
-    # extensions = ['codehilite', 'meta']
-    # # markdown.markdownFromFile(input=in_file, extensions=extensions, output=out_file, encoding='utf-8')
-    # kwargs = dict(input=in_file, extensions=extensions, output=out_file, encoding='utf-8')
-
-    # md = markdown.Markdown(**kwargs)
-    # md.convertFile(kwargs.get('input', None),
-    #                kwargs.get('output', None),
-    #                kwargs.get('encoding', None))
-
     out_file_handle = codecs.open(out_file, mode='r', encoding='utf-8')
     body = out_file_handle.read()
     out_file_handle.close()
 
-    # intro = NavbarItem(title='Intro', link='../../index.html')
-    # technical = NavbarItem(title='Technical', link='../technical-articles.html')
-    # employment = NavbarItem(title='Employment')
-    article_navbar_items = generate_navbar_items('article-details')
-    
     article = SingleArticle(title='Types versus Classes', body=body)
 
     article_template = env.get_template('article-template.html')
     rendered_tempalte = article_template.render(
         article=article, 
-        navbar_items=article_navbar_items,
+        navbar_items=generate_navbar_items('article-details'),
         header_link='../../index.html',
     )
     with open('pages/technical/types-versus-classes.html', 'w', encoding='utf-8') as f:
