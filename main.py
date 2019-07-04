@@ -12,11 +12,12 @@ env = Environment(
 )
 
 
-def find_latest_article():
-    articles = Articles('articles')
-    articles.render_markdown_files()
+articles = Articles('articles')
+articles.render_markdown_files()
+
+
+def find_latest_articles():
     return articles.get_top_articles_by_attribute_and_category('publication_date', 'technical')
-find_latest_article()
 
 
 def generate_navbar_items(current_page: str):
