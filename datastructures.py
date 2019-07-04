@@ -8,6 +8,20 @@ import markdown
 
 
 @dataclass
+class Page:
+    title: str
+    page_name: str
+    root: str = None
+
+    @property
+    def link(self):
+        if self.root:
+            return self.root + '/' + self.page_name + '.html'
+        else:
+            return self.page_name + '.html'
+
+
+@dataclass
 class NavbarItem:
     title: str
     link: str = '#'

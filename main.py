@@ -3,7 +3,7 @@ import codecs
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import markdown
 
-from datastructures import Articles, ArticleSummary, HomeCard, NavbarItem, SingleArticle
+from datastructures import Articles, ArticleSummary, HomeCard, NavbarItem, Page, SingleArticle
 
 
 env = Environment(
@@ -19,12 +19,36 @@ def find_latest_article():
 find_latest_article()
 
 
+def generate_navbar_items(current_page: str):
+    if current_page == 'home':
+        root_path = None
+        article_category_path = 'pages'
+
+    elif current_page == 'category':
+        root_path = '..'
+        article_category_path = None
+    
+    elif current_page == 'article-details':
+        root_path = '../..'
+        article_category_path = '..'
+
+    intro = Page('Home', 'index', root_path)
+    intro = NavbarItem(intro.title, intro.link)
+    technical = Page('Technical', 'technical-articles', article_category_path)
+    technical = NavbarItem(technical.title, technical.link)
+    about = Page('About', 'about', root_path)
+    about = NavbarItem(about.title, about.link)
+
+    return (intro, technical, about)
+
+
 def generate_index_page():
     # TODO: filenames "index.html" should be turned into variables
-    intro = NavbarItem(title='Home', link='index.html')
-    technical = NavbarItem(title='Technical', link='pages/technical-articles.html')
-    employment = NavbarItem(title='Employment')
-    index_navbar_items = (intro, technical, employment)
+    # intro = NavbarItem(title='Home', link='index.html')
+    # technical = NavbarItem(title='Technical', link='pages/technical-articles.html')
+    # employment = NavbarItem(title='Employment')
+    # index_navbar_items = (intro, technical, employment)
+    index_navbar_items = generate_navbar_items('home')
 
     article1 = ArticleSummary(
         title='Types versus Classes', 
@@ -45,15 +69,15 @@ def generate_index_page():
     )
     with open('index.html', 'w') as f:
         f.write(rendered_tempalte)
-# generate_index_page()
+generate_index_page()
 
 
 def generate_technical_articles_page():
     # TODO: filenames "index.html" should be turned into variables
-    intro = NavbarItem(title='Home', link='../index.html')
-    technical = NavbarItem(title='Technical', link='technical-articles.html')
-    employment = NavbarItem(title='Employment')
-    article_category_navbar_items = (intro, technical, employment)
+    # intro = NavbarItem(title='Home', link='../index.html')
+    # technical = NavbarItem(title='Technical', link='technical-articles.html')
+    # employment = NavbarItem(title='Employment')
+    article_category_navbar_items = generate_navbar_items('category')
 
     # TODO: where do these strings (title, desc, link, etc.) come from so 
     # they're not hard coded
@@ -95,10 +119,10 @@ def generate_article():
     body = out_file_handle.read()
     out_file_handle.close()
 
-    intro = NavbarItem(title='Intro', link='../../index.html')
-    technical = NavbarItem(title='Technical', link='../technical-articles.html')
-    employment = NavbarItem(title='Employment')
-    article_navbar_items = (intro, technical, employment)
+    # intro = NavbarItem(title='Intro', link='../../index.html')
+    # technical = NavbarItem(title='Technical', link='../technical-articles.html')
+    # employment = NavbarItem(title='Employment')
+    article_navbar_items = generate_navbar_items('article-details')
     
     article = SingleArticle(title='Types versus Classes', body=body)
 
