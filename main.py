@@ -53,14 +53,33 @@ def generate_index_page(articles):
         f.write(rendered_tempalte)
 
 
+def generate_about_page(articles):
+    popular_articles = articles.get_top_articles_by_attribute_and_category(
+        'popularity', 
+        'technical', 
+        5,
+    )
+    home_template = env.get_template('about-template.html')
+    rendered_tempalte = home_template.render(
+        navbar_items=generate_navbar_items('home'), 
+        header_link='index.html',
+        popular_articles=popular_articles,
+    )
+    with open('about.html', 'w') as f:
+        f.write(rendered_tempalte)
+
+
 def generate_technical_articles_page(articles):
     navbar_items = generate_navbar_items('category')
-
+    articles = articles.get_top_articles_by_attribute_and_category(
+        'publication_date',
+        'technical',
+    )
     technical_articles_template = env.get_template('articles-category-template.html')
     rendered_tempalte = technical_articles_template.render(
         navbar_items=navbar_items, 
-        technical_articles=articles.summaries,
-        featured_article=articles.summaries[0],
+        technical_articles=articles,
+        featured_article=articles[0],
         header_link='../index.html',
         page_title='Top 1% Code: Technical Articles'
     )
@@ -99,5 +118,6 @@ if __name__ == "__main__":
     articles.render_markdown_files()
     
     generate_index_page(articles)
+    generate_about_page(articles)
     generate_technical_articles_page(articles)
     generate_articles_pages(articles)

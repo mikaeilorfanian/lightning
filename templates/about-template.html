@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" type="text/css" href="static/blog.css">
+  <title>Top 1% Developer</title>
+{% endblock %}
+{% block body %}
+<div class="row">
+  <div class="main">
+    <div class="card">
+      <div class="container">
+            <h1>About</h1>
+            <p>I started programming in C at the age of 13 but moved on to other hobbies until I was 25. In college, I studied economics, finance, philosophy, English Literature, and Computer Science. As for work, I've held positions as Backend Engineer, UI Designer, UX Researcher, Product Owner, and Data Engineer. <br />
+            My main focus outside work is on answering questions like:   </p>
+            <ul>
+            <li>What best practices and patterns lead to the creation of high-quality and reliable software?   </li>
+            <li>How can the tools used by developers be improved so that we're more productive?   </li>
+            <li>What defines a good developer and how can one become a top 1% developer?</li>
+            </ul>
+      </div>
+    </div>
+
+  </div>
+  <div class="side">
+    <h2>Most Popular</h2>
+    {% for article in popular_articles %}
+      <li><a href='{{ article.link }}'>{{ article.title }}</a></li>
+    {% endfor %}
+</div>
+{% endblock %}
