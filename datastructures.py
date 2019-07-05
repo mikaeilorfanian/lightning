@@ -109,7 +109,7 @@ class Articles:
         else:
             return summaries
 
-    def get_top_articles_by_attribute_and_category(self, attribute: str, category: str=None, top_x: int=None):        
+    def get_top_articles_by_category_and_sorted_by_attribute(self, attribute: str, category: str=None, top_x: int=None):        
         articles_in_category = self.get_articles_by_category(category)
         
         if attribute == 'publication_date':

@@ -32,12 +32,12 @@ def generate_navbar_items(current_page: str):
 
 
 def generate_index_page(articles):
-    technical_articles = articles.get_top_articles_by_attribute_and_category(
+    technical_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
         'publication_date', 
         'technical',
     )
     coder_card = HomeCard(title='Top 1% coder', articles=technical_articles)
-    popular_articles = articles.get_top_articles_by_attribute_and_category(
+    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
         'popularity', 
         top_x=5,
     )
@@ -53,7 +53,7 @@ def generate_index_page(articles):
 
 
 def generate_about_page(articles):
-    popular_articles = articles.get_top_articles_by_attribute_and_category(
+    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
         'popularity', 
         'technical', 
         5,
@@ -70,7 +70,7 @@ def generate_about_page(articles):
 
 def generate_technical_articles_page(articles):
     navbar_items = generate_navbar_items('category')
-    articles = articles.get_top_articles_by_attribute_and_category(
+    articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
         'publication_date',
         'technical',
     )
