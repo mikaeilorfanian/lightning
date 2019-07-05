@@ -120,3 +120,7 @@ class Articles:
             return articles_in_category[:top_x]
         else:
             return articles_in_category
+
+    @property
+    def featured_article(self):
+        pass
