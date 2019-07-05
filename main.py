@@ -1,4 +1,5 @@
 import codecs
+from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import markdown
@@ -91,21 +92,21 @@ generate_technical_articles_page()
 
 
 def generate_article():
-    out_file = 'articles/self-driving-vehicle.html'
-    out_file_handle = codecs.open(out_file, mode='r', encoding='utf-8')
-    body = out_file_handle.read()
-    out_file_handle.close()
+    for article in articles.summaries:
+        out_file = article.output_file
+        out_file_handle = codecs.open(out_file, mode='r', encoding='utf-8')
+        article.body = out_file_handle.read()
+        out_file_handle.close()
 
-    article = SingleArticle(title='Types versus Classes', body=body)
-
-    article_template = env.get_template('article-template.html')
-    rendered_tempalte = article_template.render(
-        article=article, 
-        navbar_items=generate_navbar_items('article-details'),
-        header_link='../../index.html',
-    )
-    with open('pages/technical/types-versus-classes.html', 'w', encoding='utf-8') as f:
-        f.write(rendered_tempalte)
+        article_template = env.get_template('article-template.html')
+        rendered_tempalte = article_template.render(
+            article=article, 
+            navbar_items=generate_navbar_items('article-details'),
+            header_link='../../index.html',
+        )
+        html_page = Path('.') / 'pages' / article.category / article.output_file.name
+        with html_page.open('w', encoding='utf-8') as f:
+            f.write(rendered_tempalte)
 generate_article()
 
 
