@@ -94,7 +94,5 @@ generate_articles_pages()
 
 
 def find_popular_articles(top_x: int, category: str=None):
-    articles = Articles('articles')
-    articles.render_markdown_files()
     return articles.get_top_articles_by_attribute_and_category('popularity', category, top_x)
-popular_articles = find_popular_articles(2, 'technical')
+
