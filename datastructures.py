@@ -102,13 +102,16 @@ class Articles:
                 output_file=out_file,
             ))
 
-    def get_top_articles_by_attribute_and_category(self, attribute: str, category: str=None, top_x: int=None):
+    def get_articles_by_category(self, category: str=None):
         summaries = copy.deepcopy(self.summaries)
         if category:
-            articles_in_category = [article for article in summaries if article.category == category]
+            return [article for article in summaries if article.category == category]
         else:
-            articles_in_category = summaries
+            return summaries
 
+    def get_top_articles_by_attribute_and_category(self, attribute: str, category: str=None, top_x: int=None):        
+        articles_in_category = self.get_articles_by_category(category)
+        
         if attribute == 'publication_date':
             articles_in_category.sort(key=lambda article: article.publication_date, reverse=True)
         elif attribute == 'popularity':
