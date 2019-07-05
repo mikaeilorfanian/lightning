@@ -67,13 +67,14 @@ def generate_technical_articles_page():
         technical_articles=articles.summaries,
         featured_article=articles.summaries[0],
         header_link='../index.html',
+        page_title='Top 1% Code: Technical Articles'
     )
     with open('pages/technical-articles.html', 'w') as f:
         f.write(rendered_tempalte)
 generate_technical_articles_page()
 
 
-def generate_article():
+def generate_articles_pages():
     for article in articles.summaries:
         out_file = article.output_file
         out_file_handle = codecs.open(out_file, mode='r', encoding='utf-8')
@@ -89,7 +90,7 @@ def generate_article():
         html_page = Path('.') / 'pages' / article.category / article.output_file.name
         with html_page.open('w', encoding='utf-8') as f:
             f.write(rendered_tempalte)
-generate_article()
+generate_articles_pages()
 
 
 def find_popular_articles(top_x: int, category: str=None):
