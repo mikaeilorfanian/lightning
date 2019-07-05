@@ -112,7 +112,10 @@ if __name__ == "__main__":
     
     LOCAL_URL = 'file:///C:/Users/mokt/dev/blog'
     PROD_URL = 'https://mikaeilorfanian.github.io'
-    site_url = LOCAL_URL if sys.argv[1] == 'local' else PROD_URL
+    if len(sys.argv) == 2:
+        site_url = LOCAL_URL if sys.argv[1] == 'local' else PROD_URL
+    else:
+        site_url = LOCAL_URL
     articles = Articles('articles', site_url)
     articles.render_markdown_files()
     
