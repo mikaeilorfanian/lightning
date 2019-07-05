@@ -1,10 +1,13 @@
 import copy
 from dataclasses import dataclass
 from datetime import datetime
-import glob
+from pathlib import Path
 from typing import List
 
 import markdown
+
+
+SITE_URL = 'file:///C:/Users/mokt/dev/blog'
 
 
 @dataclass
@@ -35,7 +38,9 @@ class ArticleSummary:
     category: str
     publication_date: str
     source_file: str
+    output_file: str
     popularity: int = 0
+    html_body: str = None
 
     def __post_init__(self):
         self.publication_date = datetime.strptime(self.publication_date, '%d-%m-%Y')
@@ -62,15 +67,16 @@ class Articles:
         self.summaries = list()
 
     def find_markdown_files(self):
-        return [f for f in glob.glob(f'{self.root_path}/*.md')]
+        path = Path('.') / self.root_path
+        return [f for f in path.glob('*.md')]
 
     def render_markdown_files(self):
         for in_file in self.markdown_files:
-            print(in_file)
+            out_file = in_file.with_suffix('.html')
             extensions = ['codehilite', 'meta']
             kwargs = dict(
-                input=in_file, 
-                output=in_file.split('.md')[0]+'.html', 
+                input=in_file.as_posix(), 
+                output=out_file.as_posix(), 
                 extensions=extensions, 
                 encoding='utf-8',
             )
@@ -85,13 +91,14 @@ class Articles:
                 title=md.Meta['title'][0], 
                 description=md.Meta['description'][0],
                 link=md.Meta['link'][0].format(
-                    url='file:///C:/Users/mokt/dev/blog',
+                    url=SITE_URL,
                     category=md.Meta['category'][0],
                 ),
                 category=md.Meta['category'][0],
                 publication_date=md.Meta['publication_date'][0],
                 popularity=md.Meta['popularity'][0],
                 source_file=in_file,
+                output_file=out_file,
             ))
 
     def get_top_articles_by_attribute_and_category(self, attribute: str, category: str, top_x: int=None):
