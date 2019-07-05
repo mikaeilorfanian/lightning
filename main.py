@@ -1,24 +1,11 @@
 import codecs
 from pathlib import Path
+import sys
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import markdown
 
 from datastructures import Articles, ArticleSummary, HomeCard, NavbarItem, Page, SingleArticle
-
-
-env = Environment(
-    loader=FileSystemLoader('templates'),
-    autoescape=select_autoescape(['html', 'xml'])
-)
-
-
-articles = Articles('articles')
-articles.render_markdown_files()
-
-
-def find_latest_articles():
-    return articles.get_top_articles_by_attribute_and_category('publication_date', 'technical')
 
 
 def generate_navbar_items(current_page: str):
@@ -44,7 +31,7 @@ def generate_navbar_items(current_page: str):
     return (intro, technical, about)
 
 
-def generate_index_page():
+def generate_index_page(articles):
     technical_articles = articles.get_top_articles_by_attribute_and_category(
         'publication_date', 
         'technical',
@@ -64,10 +51,9 @@ def generate_index_page():
     )
     with open('index.html', 'w') as f:
         f.write(rendered_tempalte)
-generate_index_page()
 
 
-def generate_technical_articles_page():
+def generate_technical_articles_page(articles):
     navbar_items = generate_navbar_items('category')
 
     technical_articles_template = env.get_template('articles-category-template.html')
@@ -80,10 +66,9 @@ def generate_technical_articles_page():
     )
     with open('pages/technical-articles.html', 'w') as f:
         f.write(rendered_tempalte)
-generate_technical_articles_page()
 
 
-def generate_articles_pages():
+def generate_articles_pages(articles):
     for article in articles.summaries:
         out_file = article.output_file
         out_file_handle = codecs.open(out_file, mode='r', encoding='utf-8')
@@ -99,9 +84,20 @@ def generate_articles_pages():
         html_page = Path('.') / 'pages' / article.category / article.output_file.name
         with html_page.open('w', encoding='utf-8') as f:
             f.write(rendered_tempalte)
-generate_articles_pages()
 
 
-def find_popular_articles(top_x: int, category: str=None):
-    return articles.get_top_articles_by_attribute_and_category('popularity', category, top_x)
-
+if __name__ == "__main__":
+    env = Environment(
+        loader=FileSystemLoader('templates'),
+        autoescape=select_autoescape(['html', 'xml'])
+    )
+    
+    LOCAL_URL = 'file:///C:/Users/mokt/dev/blog'
+    PROD_URL = 'https://mikaeilorfanian.github.io'
+    site_url = LOCAL_URL if sys.argv[1] == 'local' else PROD_URL
+    articles = Articles('articles', site_url)
+    articles.render_markdown_files()
+    
+    generate_index_page(articles)
+    generate_technical_articles_page(articles)
+    generate_articles_pages(articles)
