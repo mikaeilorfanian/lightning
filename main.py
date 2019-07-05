@@ -39,8 +39,7 @@ def generate_index_page(articles):
     coder_card = HomeCard(title='Top 1% coder', articles=technical_articles)
     popular_articles = articles.get_top_articles_by_attribute_and_category(
         'popularity', 
-        'technical', 
-        5,
+        top_x=5,
     )
     home_template = env.get_template('home-template.html')
     rendered_tempalte = home_template.render(
