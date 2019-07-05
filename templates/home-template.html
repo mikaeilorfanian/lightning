@@ -47,10 +47,8 @@
   </div>
   <div class="side">
     <h2>Most Popular</h2>
-    <a href="top-coder-technical/types-versus-classes.html">Types versus Classes</a><br>
-    <a href='#'>Article 2</a><br>
-    <a href='#'>Article 3</a><br>
-    <a href='#'>Article 4</a><br>
-  </div>
+    {% for article in popular_articles %}
+      <li><a href='{{ article.link }}'>{{ article.title }}</a></li>
+    {% endfor %}
 </div>
 {% endblock %}

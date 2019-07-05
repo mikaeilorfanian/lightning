@@ -45,13 +45,22 @@ def generate_navbar_items(current_page: str):
 
 
 def generate_index_page():
-    coder_card = HomeCard(title='Top 1% coder', articles=articles.summaries)
-    
+    technical_articles = articles.get_top_articles_by_attribute_and_category(
+        'publication_date', 
+        'technical',
+    )
+    coder_card = HomeCard(title='Top 1% coder', articles=technical_articles)
+    popular_articles = articles.get_top_articles_by_attribute_and_category(
+        'popularity', 
+        'technical', 
+        5,
+    )
     home_template = env.get_template('home-template.html')
     rendered_tempalte = home_template.render(
         navbar_items=generate_navbar_items('home'), 
         home_cards=[coder_card],
         header_link='index.html',
+        popular_articles=popular_articles,
     )
     with open('index.html', 'w') as f:
         f.write(rendered_tempalte)

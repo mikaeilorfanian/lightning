@@ -60,11 +60,12 @@ class SingleArticle:
 
 class Articles:
 
-    def __init__(self, path_to_search: str):
+    def __init__(self, path_to_search: str, site_url: str):
         self.root_path = path_to_search
         self.markdown_files = self.find_markdown_files()
         self.metadata = dict()
         self.summaries = list()
+        self.site_url = site_url
 
     def find_markdown_files(self):
         path = Path('.') / self.root_path
@@ -91,7 +92,7 @@ class Articles:
                 title=md.Meta['title'][0], 
                 description=md.Meta['description'][0],
                 link=md.Meta['link'][0].format(
-                    url=SITE_URL,
+                    url=self.site_url,
                     category=md.Meta['category'][0],
                 ),
                 category=md.Meta['category'][0],
