@@ -61,7 +61,7 @@ generate_index_page()
 def generate_technical_articles_page():
     navbar_items = generate_navbar_items('category')
 
-    technical_articles_template = env.get_template('technical-articles-template.html')
+    technical_articles_template = env.get_template('articles-category-template.html')
     rendered_tempalte = technical_articles_template.render(
         navbar_items=navbar_items, 
         technical_articles=articles.summaries,
