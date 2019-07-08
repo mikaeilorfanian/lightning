@@ -68,9 +68,9 @@ def generate_about_page(articles):
         f.write(rendered_tempalte)
 
 
-def generate_technical_articles_page(articles):
+def generate_technical_articles_page(_articles):
     navbar_items = generate_navbar_items('category')
-    articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
+    articles = _articles.get_top_articles_by_category_and_sorted_by_attribute(
         'publication_date',
         'technical',
     )
@@ -78,7 +78,7 @@ def generate_technical_articles_page(articles):
     rendered_tempalte = technical_articles_template.render(
         navbar_items=navbar_items, 
         technical_articles=articles,
-        featured_article=articles[0],
+        featured_article=_articles.get_featured_article('technical'),
         header_link='../index.html',
         page_title='Top 1% Code: Technical Articles'
     )

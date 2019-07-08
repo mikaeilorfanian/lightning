@@ -41,6 +41,7 @@ class ArticleSummary:
     output_file: str
     popularity: int = 0
     html_body: str = None
+    featured: bool = False
 
     def __post_init__(self):
         self.publication_date = datetime.strptime(self.publication_date, '%d-%m-%Y')
@@ -88,6 +89,7 @@ class Articles:
 
             self.metadata[in_file] = md.Meta
 
+            featured = True if md.Meta.get('featured', ['no'])[0] == 'true' else False
             self.summaries.append(ArticleSummary(
                 title=md.Meta['title'][0], 
                 description=md.Meta['description'][0],
@@ -100,6 +102,7 @@ class Articles:
                 popularity=md.Meta['popularity'][0],
                 source_file=in_file,
                 output_file=out_file,
+                featured=featured,
             ))
 
     def get_articles_by_category(self, category: str=None):
@@ -124,6 +127,14 @@ class Articles:
         else:
             return articles_in_category
 
-    @property
-    def featured_article(self):
-        pass
+    def get_featured_article(self, category):
+        articles_in_category = self.get_articles_by_category(category)
+        featured_articles = [
+            article 
+            for article in articles_in_category 
+            if article.featured
+        ]
+        
+        assert len(featured_articles) == 1
+
+        return featured_articles[0]
