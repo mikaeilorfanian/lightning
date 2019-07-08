@@ -10,7 +10,7 @@
       <div class="card">
         <div class="container">
           <h2>{{page_title}}</h2>
-          <h3>Featured: <a href="{{ featured_article.link }}">{{ featured_article.title }}</a>:{{ featured_article.description }}</h3>
+          <h3>Featured <a href="{{ featured_article.link }}">{{ featured_article.title }}</a>:{{ featured_article.description }}</h3>
           <ul>
             {% for article in technical_articles %}
               <li><a href='{{ article.link }}'>{{ article.title }}</a>:{{ article.description }}</li>
