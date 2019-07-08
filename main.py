@@ -70,15 +70,20 @@ def generate_about_page(articles):
 
 def generate_technical_articles_page(_articles):
     navbar_items = generate_navbar_items('category')
-    articles = _articles.get_top_articles_by_category_and_sorted_by_attribute(
+    articles_chronological = _articles.get_top_articles_by_category_and_sorted_by_attribute(
         'publication_date',
+        'technical',
+    )
+    articles_popular = _articles.get_top_articles_by_category_and_sorted_by_attribute(
+        'popularity',
         'technical',
     )
     technical_articles_template = env.get_template('articles-category-template.html')
     rendered_tempalte = technical_articles_template.render(
         navbar_items=navbar_items, 
-        technical_articles=articles,
+        technical_articles=articles_chronological,
         featured_article=_articles.get_featured_article('technical'),
+        popular_articles=articles_popular,
         header_link='../index.html',
         page_title='Top 1% Code: Technical Articles'
     )

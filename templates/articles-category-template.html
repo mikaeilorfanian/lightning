@@ -18,29 +18,14 @@
           </ul>
         </div>
       </div>
-<!--
-    <div class="card">
-      <div class="container">
-        <h2>Tope 1% Code: Technical Articles</h2>
-        <h3>Latest: <a href="top-coder-technical/types-versus-classes.html">Types vs. Classes</a></h3>
-        <ul>
-          <li><a href='#'>Article 1</a></li>
-          <li><a href='#'>Article 2</a></li>
-          <li><a href='#'>Article 3</a></li>
-          <li><a href='#'>Article 4</a></li>
-        </ul>
-      </div>
-    </div>
-    -->
   </div>
 
   <div class="side">
     <h2>Popular</h2>
     <ul>
-      <li><a href='#'>Article 1</a></li>
-      <li><a href='#'>Article 2</a></li>
-      <li><a href='#'>Article 3</a></li>
-      <li><a href='#'>Article 4</a></li>
+      {% for article in popular_articles %}
+        <li><a href='{{ article.link }}'>{{ article.title }}</a></li>
+      {% endfor %}
     </ul>
   </div>
 
