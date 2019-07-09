@@ -5,6 +5,7 @@ publication_date: 02-07-2019
 category: technical
 link: {url}/pages/{category}/types-versus-classes.html
 popularity: 2
+featured: true
 ---
 # Types versus Classes
 - Programming to interfaces or types is better than programming to implementation or classes.
