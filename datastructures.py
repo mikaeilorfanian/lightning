@@ -7,9 +7,6 @@ from typing import List
 import markdown
 
 
-SITE_URL = 'file:///C:/Users/mokt/dev/blog'
-
-
 @dataclass
 class Page:
     title: str
