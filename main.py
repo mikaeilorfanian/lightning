@@ -8,6 +8,9 @@ import markdown
 from datastructures import Articles, ArticleSummary, HomeCard, NavbarItem, Page, SingleArticle
 
 
+TOP_X_ARTICLES = 5
+
+
 def generate_navbar_items(current_page: str):
     if current_page == 'home':
         root_path = None
@@ -21,14 +24,16 @@ def generate_navbar_items(current_page: str):
         root_path = '../..'
         article_category_path = '..'
 
-    intro = Page('Home', 'index', root_path)
+    home = Page('Home', 'index', root_path)
+    home = NavbarItem(home.title, home.link)
+    intro = Page('README', 'intro', root_path)
     intro = NavbarItem(intro.title, intro.link)
     technical = Page('Technical', 'technical-articles', article_category_path)
     technical = NavbarItem(technical.title, technical.link)
     about = Page('About', 'about', root_path)
     about = NavbarItem(about.title, about.link)
 
-    return (intro, technical, about)
+    return (home , intro, technical, about)
 
 
 def generate_index_page(articles):
@@ -55,16 +60,30 @@ def generate_index_page(articles):
 def generate_about_page(articles):
     popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
         'popularity', 
-        'technical', 
-        5,
+        TOP_X_ARTICLES,
     )
-    home_template = env.get_template('about-template.html')
-    rendered_tempalte = home_template.render(
+    about_template = env.get_template('about-template.html')
+    rendered_tempalte = about_template.render(
         navbar_items=generate_navbar_items('home'), 
         header_link='index.html',
         popular_articles=popular_articles,
     )
     with open('about.html', 'w') as f:
+        f.write(rendered_tempalte)
+
+
+def generate_intro_page(articles):
+    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
+        'popularity', 
+        TOP_X_ARTICLES,
+    )
+    intro_template = env.get_template('intro-template.html')
+    rendered_tempalte = intro_template.render(
+        navbar_items=generate_navbar_items('home'), 
+        header_link='index.html',
+        popular_articles=popular_articles,
+    )
+    with open('intro.html', 'w') as f:
         f.write(rendered_tempalte)
 
 
@@ -126,5 +145,6 @@ if __name__ == "__main__":
     
     generate_index_page(articles)
     generate_about_page(articles)
+    generate_intro_page(articles)
     generate_technical_articles_page(articles)
     generate_articles_pages(articles)
