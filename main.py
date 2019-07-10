@@ -5,7 +5,15 @@ import sys
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import markdown
 
-from datastructures import Articles, ArticleSummary, HomeCard, NavbarItem, Page, SingleArticle
+from datastructures import (
+    Articles, 
+    ArticleCategory,
+    ArticleSummary, 
+    HomeCard, 
+    NavbarItem, 
+    Page, 
+    SingleArticle,
+)
 
 
 TOP_X_ARTICLES = 5
@@ -26,14 +34,16 @@ def generate_navbar_items(current_page: str):
 
     home = Page('Home', 'index', root_path)
     home = NavbarItem(home.title, home.link)
-    intro = Page('README', 'intro', root_path)
-    intro = NavbarItem(intro.title, intro.link)
+    # intro = Page('README', 'intro', root_path)
+    # intro = NavbarItem(intro.title, intro.link)
+    philosophy = Page('Philosophy', 'philosophy-articles', article_category_path)
+    philosophy = NavbarItem(philosophy.title, philosophy.link)
     technical = Page('Technical', 'technical-articles', article_category_path)
     technical = NavbarItem(technical.title, technical.link)
     about = Page('About', 'about', root_path)
     about = NavbarItem(about.title, about.link)
 
-    return (home , intro, technical, about)
+    return (home , philosophy, technical, about)
 
 
 def generate_index_page(articles):
@@ -41,7 +51,14 @@ def generate_index_page(articles):
         'publication_date', 
         'technical',
     )
-    coder_card = HomeCard(title='Top 1% coder', articles=technical_articles)
+    coder_card = HomeCard(title='Top 1% Coder', articles=technical_articles)
+    
+    philosophy_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
+        'publication_date', 
+        'philosophy',
+    )
+    thinker_card = HomeCard(title='Top 1% Thinker', articles=philosophy_articles)
+    
     popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
         'popularity', 
         top_x=5,
@@ -49,7 +66,7 @@ def generate_index_page(articles):
     home_template = env.get_template('home-template.html')
     rendered_tempalte = home_template.render(
         navbar_items=generate_navbar_items('home'), 
-        home_cards=[coder_card],
+        home_cards=[coder_card, thinker_card],
         header_link='index.html',
         popular_articles=popular_articles,
     )
@@ -72,42 +89,57 @@ def generate_about_page(articles):
         f.write(rendered_tempalte)
 
 
-def generate_intro_page(articles):
-    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
-        'popularity', 
-        TOP_X_ARTICLES,
-    )
-    intro_template = env.get_template('intro-template.html')
-    rendered_tempalte = intro_template.render(
-        navbar_items=generate_navbar_items('home'), 
-        header_link='index.html',
-        popular_articles=popular_articles,
-    )
-    with open('intro.html', 'w') as f:
-        f.write(rendered_tempalte)
+# def generate_intro_page(articles):
+#     popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
+#         'popularity', 
+#         TOP_X_ARTICLES,
+#     )
+#     intro_template = env.get_template('intro-template.html')
+#     rendered_tempalte = intro_template.render(
+#         navbar_items=generate_navbar_items('home'), 
+#         header_link='index.html',
+#         popular_articles=popular_articles,
+#     )
+#     with open('intro.html', 'w') as f:
+#         f.write(rendered_tempalte)
 
 
 def generate_technical_articles_page(_articles):
-    navbar_items = generate_navbar_items('category')
-    articles_chronological = _articles.get_top_articles_by_category_and_sorted_by_attribute(
-        'publication_date',
-        'technical',
-    )
-    articles_popular = _articles.get_top_articles_by_category_and_sorted_by_attribute(
-        'popularity',
-        'technical',
-    )
-    technical_articles_template = env.get_template('articles-category-template.html')
-    rendered_tempalte = technical_articles_template.render(
-        navbar_items=navbar_items, 
-        technical_articles=articles_chronological,
-        featured_article=_articles.get_featured_article('technical'),
-        popular_articles=articles_popular,
-        header_link='../index.html',
-        page_title='Top 1% Code: Technical Articles'
-    )
-    with open('pages/technical-articles.html', 'w') as f:
-        f.write(rendered_tempalte)
+    categories = [
+        ArticleCategory(
+            'technical',
+            'Top 1% Code: Technical Articles',
+            'technical-articles',
+            'pages',
+        ),
+        ArticleCategory(
+            'philosophy',
+            'Top 1% Thinker: Thinking Superpowers',
+            'philosophy-articles',
+            'pages',
+        )
+    ]
+    for category in categories:
+        navbar_items = generate_navbar_items('category')
+        articles_chronological = _articles.get_top_articles_by_category_and_sorted_by_attribute(
+            'publication_date',
+            category.name,
+        )
+        articles_popular = _articles.get_top_articles_by_category_and_sorted_by_attribute(
+            'popularity',
+            category.name,
+        )
+        technical_articles_template = env.get_template('articles-category-template.html')
+        rendered_tempalte = technical_articles_template.render(
+            navbar_items=navbar_items, 
+            technical_articles=articles_chronological,
+            featured_article=_articles.get_featured_article(category.name),
+            popular_articles=articles_popular,
+            header_link='../index.html',
+            page_title=category.page_title
+        )
+        with open(category.link, 'w') as f:
+            f.write(rendered_tempalte)
 
 
 def generate_articles_pages(articles):
@@ -145,6 +177,6 @@ if __name__ == "__main__":
     
     generate_index_page(articles)
     generate_about_page(articles)
-    generate_intro_page(articles)
+    # generate_intro_page(articles)
     generate_technical_articles_page(articles)
     generate_articles_pages(articles)

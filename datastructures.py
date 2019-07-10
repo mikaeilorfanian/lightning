@@ -22,6 +22,21 @@ class Page:
 
 
 @dataclass
+class ArticleCategory:
+    name: str
+    page_title: str
+    page_name: str
+    root: str = None
+
+    @property
+    def link(self):
+        if self.root:
+            return self.root + '/' + self.page_name + '.html'
+        else:
+            return self.page_name + '.html'
+
+
+@dataclass
 class NavbarItem:
     title: str
     link: str = '#'
@@ -72,7 +87,11 @@ class Articles:
     def render_markdown_files(self):
         for in_file in self.markdown_files:
             out_file = in_file.with_suffix('.html')
-            extensions = ['codehilite', 'meta']
+            extensions = [
+                'codehilite', 
+                'meta',
+                'nl2br',
+            ]
             kwargs = dict(
                 input=in_file.as_posix(), 
                 output=out_file.as_posix(), 
