@@ -83,7 +83,6 @@ def generate_wiki_page(articles):
     wiki_html_file.close()
 
     popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute('popularity', TOP_X_ARTICLES)
-    print(popular_articles)
     wiki_template = env.get_template('wiki-template.html')
     rendered_tempalte = wiki_template.render(
         navbar_items=generate_navbar_items('home'),
