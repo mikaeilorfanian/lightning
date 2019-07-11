@@ -29,8 +29,8 @@ def generate_navbar_items(current_page: str):
 
     home = Page('Home', 'index', root_path)
     home = NavbarItem(home.title, home.link)
-    # intro = Page('README', 'intro', root_path)
-    # intro = NavbarItem(intro.title, intro.link)
+    wiki = Page('Wiki', 'wiki', root_path)
+    wiki = NavbarItem(wiki.title, wiki.link)
     philosophy = Page('Philosophy', 'philosophy-articles', article_category_path)
     philosophy = NavbarItem(philosophy.title, philosophy.link)
     technical = Page('Technical', 'technical-articles', article_category_path)
@@ -38,7 +38,7 @@ def generate_navbar_items(current_page: str):
     about = Page('About', 'about', root_path)
     about = NavbarItem(about.title, about.link)
 
-    return (home, philosophy, technical, about)
+    return (home, philosophy, technical, wiki, about)
 
 
 def generate_index_page(articles):
