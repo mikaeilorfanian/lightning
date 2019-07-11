@@ -1,9 +1,11 @@
 import codecs
+import os
 from pathlib import Path
 import sys
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import markdown
+from markdown.extensions.wikilinks import WikiLinkExtension
 
 from datastructures import (
     Articles, 
@@ -89,19 +91,27 @@ def generate_about_page(articles):
         f.write(rendered_tempalte)
 
 
-# def generate_intro_page(articles):
-#     popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
-#         'popularity', 
-#         TOP_X_ARTICLES,
-#     )
-#     intro_template = env.get_template('intro-template.html')
-#     rendered_tempalte = intro_template.render(
-#         navbar_items=generate_navbar_items('home'), 
-#         header_link='index.html',
-#         popular_articles=popular_articles,
-#     )
-#     with open('intro.html', 'w') as f:
-#         f.write(rendered_tempalte)
+def generate_wiki_page(articles):
+    extensions = [WikiLinkExtension(build_url=wiki_url_builder), 'nl2br', 'extra']
+    kwargs = dict(input='wiki.md', output='wiki.html', extensions=extensions, encoding='utf-8')
+    md = markdown.Markdown(**kwargs)
+    md.convertFile(kwargs.get('input', None), kwargs.get('output', None), kwargs.get('encoding', None))
+
+    wiki_html_file = codecs.open('wiki.html', mode='r', encoding='utf-8')
+    wiki_html = wiki_html_file.read()
+    wiki_html_file.close()
+
+    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute('popularity', TOP_X_ARTICLES)
+    print(popular_articles)
+    wiki_template = env.get_template('wiki-template.html')
+    rendered_tempalte = wiki_template.render(
+        navbar_items=generate_navbar_items('home'),
+        header_link='index.html',
+        popular_articles=popular_articles,
+        wiki_html=wiki_html,
+    )
+    with open('wiki.html', 'w') as f:
+        f.write(rendered_tempalte)
 
 
 def generate_technical_articles_page(_articles):
@@ -177,6 +187,6 @@ if __name__ == "__main__":
     
     generate_index_page(articles)
     generate_about_page(articles)
-    # generate_intro_page(articles)
+    generate_wiki_page(articles)
     generate_technical_articles_page(articles)
     generate_articles_pages(articles)
