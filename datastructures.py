@@ -122,7 +122,6 @@ class Articles:
         self, attribute: str, category: str = None, top_x: int = None
     ):
         articles_in_category = self.get_articles_by_category(category)
-
         if attribute == 'publication_date':
             articles_in_category.sort(key=lambda article: article.publication_date, reverse=True)
         elif attribute == 'popularity':
