@@ -12,19 +12,20 @@ from wiki import wiki_url_builder
 
 
 TOP_X_ARTICLES = 5
+FINAL_PAGES_DIR = 'pages'
 
 
 def generate_navbar_items(current_page: str):
     if current_page == 'home':
-        root_path = None
-        article_category_path = 'pages'
+        root_path = os.environ['SITE_URL']
+        article_category_path = f"{os.environ['SITE_URL']}/{FINAL_PAGES_DIR}"
 
     elif current_page == 'category':
-        root_path = '..'
-        article_category_path = None
+        root_path = os.environ['SITE_URL']
+        article_category_path = f"{os.environ['SITE_URL']}/{FINAL_PAGES_DIR}"
 
     elif current_page == 'article-details':
-        root_path = '../..'
+        root_path = os.environ['SITE_URL']
         article_category_path = '..'
 
     home = Page('Home', 'index', root_path)
