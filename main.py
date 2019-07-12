@@ -26,7 +26,7 @@ def generate_navbar_items(current_page: str):
 
     elif current_page == 'article-details':
         root_path = os.environ['SITE_URL']
-        article_category_path = '..'
+        article_category_path = f"{os.environ['SITE_URL']}/{FINAL_PAGES_DIR}"
 
     home = Page('Home', 'index', root_path)
     home = NavbarItem(home.title, home.link)
