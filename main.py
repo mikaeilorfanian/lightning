@@ -21,6 +21,7 @@ from wiki import wiki_url_builder
 
 TOP_X_ARTICLES = 5
 FINAL_PAGES_DIR = 'pages'
+RAW_ARTICLES_DIR = 'articles'
 
 
 def generate_navbar_items(current_page: str):
@@ -155,7 +156,7 @@ def generate_articles_pages(articles):
             navbar_items=generate_navbar_items('article-details'),
             header_link='../../index.html',
         )
-        html_page = Path('.') / 'pages' / article.category / article.output_file.name
+        html_page = Path('.') / FINAL_PAGES_DIR / article.category / article.output_file.name
         with html_page.open('w', encoding='utf-8') as f:
             f.write(rendered_tempalte)
 
@@ -173,7 +174,7 @@ if __name__ == "__main__":
         site_url = LOCAL_URL
     os.environ['SITE_URL'] = site_url
 
-    articles = Articles('articles', site_url)
+    articles = Articles(RAW_ARTICLES_DIR, site_url)
     articles.render_markdown_files()
 
     generate_home_page(articles)
