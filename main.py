@@ -63,7 +63,7 @@ def generate_index_page(articles):
 
 
 def generate_about_page(articles):
-    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute('popularity', TOP_X_ARTICLES)
+    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute('popularity', top_x=TOP_X_ARTICLES)
     about_template = env.get_template('about-template.html')
     rendered_tempalte = about_template.render(
         navbar_items=generate_navbar_items('home'), header_link='index.html', popular_articles=popular_articles
@@ -78,7 +78,7 @@ def generate_wiki_page(articles):
     md = markdown.Markdown(**kwargs)
     md.convertFile(kwargs.get('input', None), kwargs.get('output', None), kwargs.get('encoding', None))
 
-    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute('popularity', TOP_X_ARTICLES)
+    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute('popularity', top_x=TOP_X_ARTICLES)
     wiki_template = env.get_template('wiki-template.html')
     rendered_tempalte = wiki_template.render(
         navbar_items=generate_navbar_items('home'),
