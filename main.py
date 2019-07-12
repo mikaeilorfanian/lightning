@@ -50,7 +50,7 @@ def generate_home_page(articles):
     )
     thinker_card = HomeCard(title='Top 1% Thinker', articles=philosophy_articles)
 
-    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute('popularity', top_x=5)
+    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute('popularity', top_x=TOP_X_ARTICLES)
     home_template = env.get_template('home-template.html')
     rendered_tempalte = home_template.render(
         navbar_items=generate_navbar_items('home'),
