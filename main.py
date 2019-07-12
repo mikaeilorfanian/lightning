@@ -41,7 +41,7 @@ def generate_navbar_items(current_page: str):
     return (home, philosophy, technical, wiki, about)
 
 
-def generate_index_page(articles):
+def generate_home_page(articles):
     technical_articles = articles.get_top_articles_by_category_and_sorted_by_attribute('publication_date', 'technical')
     coder_card = HomeCard(title='Top 1% Coder', articles=technical_articles)
 
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     articles = Articles('articles', site_url)
     articles.render_markdown_files()
 
-    generate_index_page(articles)
+    generate_home_page(articles)
     generate_about_page(articles)
     generate_wiki_page(articles)
     generate_technical_articles_page(articles)
