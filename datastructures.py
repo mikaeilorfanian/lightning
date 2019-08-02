@@ -11,7 +11,7 @@ from wiki import wiki_url_builder
 
 
 @dataclass
-class Page:
+class NavbarItem:
     title: str
     page_name: str
     root: str = None
@@ -40,12 +40,6 @@ class ArticleCategory:
 
 
 @dataclass
-class NavbarItem:
-    title: str
-    link: str = '#'
-
-
-@dataclass
 class ArticleSummary:
     title: str
     description: str
@@ -64,27 +58,31 @@ class ArticleSummary:
 
 @dataclass
 class HomeCard:
+    '''
+    These are cards or groups of articles that show up in the home page.
+    A Card is a container for articles with the same category.
+    '''
+
     title: str
     articles: List[ArticleSummary]
-
-
-@dataclass
-class SingleArticle:
-    title: str
-    body: str
 
 
 class Articles:
     def __init__(self, path_to_search: str, site_url: str):
         self.root_path = path_to_search
         self.markdown_files = self.find_markdown_files()
-        self.metadata = dict()
         self.summaries = list()
         self.site_url = site_url
 
     def find_markdown_files(self):
+        '''
+        Return paths for all the article markdown files
+        '''
         path = Path('.') / self.root_path
         return [f for f in path.glob('*.md')]
+
+    def is_article_featured(self, article_metadata: dict) -> bool:
+        return True if article_metadata.get('featured', ['no'])[0] == 'true' else False
 
     def render_markdown_files(self):
         for in_file in self.markdown_files:
@@ -102,13 +100,8 @@ class Articles:
                 encoding='utf-8',
             )
             md = markdown.Markdown(**kwargs)
-            md.convertFile(
-                kwargs.get('input', None), kwargs.get('output', None), kwargs.get('encoding', None)
-            )
+            md.convertFile(kwargs['input'], kwargs['output'], kwargs['encoding'])
 
-            self.metadata[in_file] = md.Meta
-
-            featured = True if md.Meta.get('featured', ['no'])[0] == 'true' else False
             self.summaries.append(
                 ArticleSummary(
                     title=md.Meta['title'][0],
@@ -121,7 +114,7 @@ class Articles:
                     popularity=md.Meta['popularity'][0],
                     source_file=in_file,
                     output_file=out_file,
-                    featured=featured,
+                    featured=self.is_article_featured(md.Meta),
                 )
             )
 

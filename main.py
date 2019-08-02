@@ -1,131 +1,134 @@
+import dataclasses
+import logging
 import os
 from pathlib import Path
 import sys
+from typing import List
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import markdown
 from markdown.extensions.wikilinks import WikiLinkExtension
 
-from datastructures import (
-    Articles,
-    ArticleCategory,
-    ArticleSummary,
-    HomeCard,
-    NavbarItem,
-    Page,
-    SingleArticle,
-)
+from config import config
+from datastructures import Articles, ArticleCategory, ArticleSummary, HomeCard, NavbarItem
 from utils import read_file_content
 from wiki import wiki_url_builder
 
 
-TOP_X_ARTICLES = 5
-FINAL_PAGES_DIR = 'pages'
-RAW_ARTICLES_DIR = 'articles'
+def generate_navbar_items():
+    '''
+    To add a navbar item (button + link), create a NavbarItem instance here.
+    '''
+    root_path = config.blog_root_url
+    article_category_path = f"{config.blog_root_url}/{config.FINAL_PAGES_DIR}"
+
+    return (
+        NavbarItem('Home', 'index', root_path),
+        NavbarItem('Wiki', 'wiki', root_path),
+        NavbarItem('Philosophy', 'philosophy-articles', article_category_path),
+        NavbarItem('Technical', 'technical-articles', article_category_path),
+        NavbarItem('About', 'about', root_path),
+    )
 
 
-def generate_navbar_items(current_page: str):
-    if current_page == 'home':
-        root_path = os.environ['SITE_URL']
-        article_category_path = f"{os.environ['SITE_URL']}/{FINAL_PAGES_DIR}"
-
-    elif current_page == 'category':
-        root_path = os.environ['SITE_URL']
-        article_category_path = f"{os.environ['SITE_URL']}/{FINAL_PAGES_DIR}"
-
-    elif current_page == 'article-details':
-        root_path = os.environ['SITE_URL']
-        article_category_path = f"{os.environ['SITE_URL']}/{FINAL_PAGES_DIR}"
-
-    home = Page('Home', 'index', root_path)
-    home = NavbarItem(home.title, home.link)
-    wiki = Page('Wiki', 'wiki', root_path)
-    wiki = NavbarItem(wiki.title, wiki.link)
-    philosophy = Page('Philosophy', 'philosophy-articles', article_category_path)
-    philosophy = NavbarItem(philosophy.title, philosophy.link)
-    technical = Page('Technical', 'technical-articles', article_category_path)
-    technical = NavbarItem(technical.title, technical.link)
-    about = Page('About', 'about', root_path)
-    about = NavbarItem(about.title, about.link)
-
-    return (home, philosophy, technical, wiki, about)
+navbar_items = generate_navbar_items()
 
 
-def generate_home_page(articles):
+@dataclasses.dataclass
+class Category:
+    technical: str = 'technical'
+    philosophy: str = 'philosophy'
+
+
+categories = Category()
+
+
+@dataclasses.dataclass
+class SortingAttr:
+    pub_date: str = 'publication_date'
+    popularity: str = 'popularity'
+
+
+sorting_attributes = SortingAttr()
+
+
+def generate_home_page(articles: Articles):
+    '''
+    '''
     technical_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
-        'publication_date', 'technical'
+        sorting_attributes.pub_date, categories.technical
     )
     coder_card = HomeCard(title='Top 1% Coder', articles=technical_articles)
 
     philosophy_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
-        'publication_date', 'philosophy'
+        sorting_attributes.pub_date, categories.philosophy
     )
     thinker_card = HomeCard(title='Top 1% Thinker', articles=philosophy_articles)
 
     popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
-        'popularity', top_x=TOP_X_ARTICLES
+        sorting_attributes.popularity, top_x=config.TOP_X_ARTICLES
     )
-    home_template = env.get_template('home-template.html')
+    home_template = env.get_template(config.home_page_template)
     rendered_tempalte = home_template.render(
-        navbar_items=generate_navbar_items('home'),
+        navbar_items=navbar_items,
         home_cards=[coder_card, thinker_card],
-        header_link='index.html',
+        header_link=config.index_page,
         popular_articles=popular_articles,
     )
-    with open('index.html', 'w') as f:
+    with open(config.index_page, 'w') as f:
         f.write(rendered_tempalte)
 
 
-def generate_about_page(articles):
+def generate_about_page(articles: Articles):
     popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
-        'popularity', top_x=TOP_X_ARTICLES
+        sorting_attributes.popularity, top_x=config.TOP_X_ARTICLES
     )
-    about_template = env.get_template('about-template.html')
+    about_template = env.get_template(config.about_page_template)
     rendered_tempalte = about_template.render(
-        navbar_items=generate_navbar_items('home'),
-        header_link='index.html',
-        popular_articles=popular_articles,
+        navbar_items=navbar_items, header_link=config.index_page, popular_articles=popular_articles
     )
-    with open('about.html', 'w') as f:
+    with open(config.about_page, 'w') as f:
         f.write(rendered_tempalte)
 
 
-def generate_wiki_page(articles):
+def generate_wiki_page(articles: Articles):
     extensions = [WikiLinkExtension(build_url=wiki_url_builder), 'nl2br', 'extra']
-    kwargs = dict(input='wiki.md', output='wiki.html', extensions=extensions, encoding='utf-8')
-    md = markdown.Markdown(**kwargs)
-    md.convertFile(
-        kwargs.get('input', None), kwargs.get('output', None), kwargs.get('encoding', None)
+    kwargs = dict(
+        input=config.wiki_page_md, output=config.wiki_page, extensions=extensions, encoding='utf-8'
     )
+    md = markdown.Markdown(**kwargs)
+    md.convertFile(kwargs['input'], kwargs['output'], kwargs['encoding'])
 
     popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
-        'popularity', top_x=TOP_X_ARTICLES
+        sorting_attributes.popularity, top_x=config.TOP_X_ARTICLES
     )
-    wiki_template = env.get_template('wiki-template.html')
+    wiki_template = env.get_template(config.wiki_page_template)
     rendered_tempalte = wiki_template.render(
-        navbar_items=generate_navbar_items('home'),
-        header_link='index.html',
+        navbar_items=navbar_items,
+        header_link=config.index_page,
         popular_articles=popular_articles,
-        wiki_html=read_file_content('wiki.html'),
+        wiki_html=read_file_content(config.wiki_page),
     )
-    with open('wiki.html', 'w') as f:
+    with open(config.wiki_page, 'w') as f:
         f.write(rendered_tempalte)
 
 
 def generate_technical_articles_page(_articles):
     categories = [
         ArticleCategory(
-            'technical', 'Top 1% Code: Technical Articles', 'technical-articles', FINAL_PAGES_DIR
+            'technical',
+            'Top 1% Code: Technical Articles',
+            'technical-articles',
+            config.FINAL_PAGES_DIR,
         ),
         ArticleCategory(
             'philosophy',
             'Top 1% Thinker: Thinking Superpowers',
             'philosophy-articles',
-            FINAL_PAGES_DIR,
+            config.FINAL_PAGES_DIR,
         ),
     ]
     for category in categories:
-        navbar_items = generate_navbar_items('category')
         articles_chronological = _articles.get_top_articles_by_category_and_sorted_by_attribute(
             'publication_date', category.name
         )
@@ -152,30 +155,27 @@ def generate_articles_pages(articles):
 
         article_template = env.get_template('article-template.html')
         rendered_tempalte = article_template.render(
-            article=article,
-            navbar_items=generate_navbar_items('article-details'),
-            header_link='../../index.html',
+            article=article, navbar_items=navbar_items, header_link='../../index.html'
         )
-        html_page = Path('.') / FINAL_PAGES_DIR / article.category / article.output_file.name
+        html_page = Path('.') / config.FINAL_PAGES_DIR / article.category / article.output_file.name
         with html_page.open('w', encoding='utf-8') as f:
             f.write(rendered_tempalte)
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+
     env = Environment(
-        loader=FileSystemLoader('templates'), autoescape=select_autoescape(['html', 'xml'])
+        loader=FileSystemLoader(config.templates_folder),
+        autoescape=select_autoescape(['html', 'xml']),
     )
 
-    LOCAL_URL = 'file:///C:/Users/mokt/dev/blog'
-    PROD_URL = 'https://mikaeilorfanian.github.io'
-    if len(sys.argv) == 2:
-        site_url = LOCAL_URL if sys.argv[1] == 'local' else PROD_URL
-    else:
-        site_url = LOCAL_URL
-    os.environ['SITE_URL'] = site_url
+    logging.info('Environment setup complete!')
 
-    articles = Articles(RAW_ARTICLES_DIR, site_url)
+    articles = Articles(config.RAW_ARTICLES_DIR, config.blog_root_url)
     articles.render_markdown_files()
+
+    logging.info('Rendered Markdown articles to HTML!')
 
     generate_home_page(articles)
     generate_about_page(articles)
