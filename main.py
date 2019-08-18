@@ -150,7 +150,7 @@ def generate_technical_articles_page(_articles):
             f.write(rendered_tempalte)
 
 
-def generate_articles_pages(articles):
+def generate_page_for_each_article(articles):
     for article in articles.summaries:
         out_file = article.output_file
         article.body = read_file_content(out_file)
@@ -183,4 +183,4 @@ if __name__ == "__main__":
     generate_page(articles, config.about_page_template, config.about_page)
     generate_wiki_page(articles)
     generate_technical_articles_page(articles)
-    generate_articles_pages(articles)
+    generate_page_for_each_article(articles)
