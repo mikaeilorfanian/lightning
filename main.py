@@ -80,12 +80,15 @@ def generate_home_page(articles: Articles):
         f.write(rendered_tempalte)
 
 
-def generate_page(articles: Articles, template_filename: str, page_output_filename: str):
+def generate_page(
+    articles: Articles, template_filename: str, page_output_filename: str, **template_context_params
+):
     template = env.get_template(template_filename)
     rendered_tempalte = template.render(
         navbar_items=navbar_items,
         header_link=config.index_page,
         popular_articles=top_x_popular_articles,
+        **template_context_params,
     )
     with open(page_output_filename, 'w') as f:
         f.write(rendered_tempalte)
