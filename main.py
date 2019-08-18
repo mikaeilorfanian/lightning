@@ -101,14 +101,11 @@ def generate_wiki_page(articles: Articles):
     md = markdown.Markdown(**kwargs)
     md.convertFile(kwargs['input'], kwargs['output'], kwargs['encoding'])
 
-    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
-        sorting_attributes.popularity, top_x=config.TOP_X_ARTICLES
-    )
     wiki_template = env.get_template(config.wiki_page_template)
     rendered_tempalte = wiki_template.render(
         navbar_items=navbar_items,
         header_link=config.index_page,
-        popular_articles=popular_articles,
+        popular_articles=top_x_popular_articles,
         wiki_html=read_file_content(config.wiki_page),
     )
     with open(config.wiki_page, 'w') as f:
@@ -177,6 +174,10 @@ if __name__ == "__main__":
 
     articles = Articles(config.RAW_ARTICLES_DIR, config.blog_root_url)
     articles.render_markdown_files()
+
+    top_x_popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
+        sorting_attributes.popularity, top_x=config.TOP_X_ARTICLES
+    )
 
     logging.info('Converted Markdown articles to HTML!')
     logging.info('---------- Rendering Blog ----------')
