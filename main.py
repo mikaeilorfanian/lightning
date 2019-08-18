@@ -104,17 +104,12 @@ def generate_wiki_page(articles: Articles):
     md = markdown.Markdown(**kwargs)
     md.convertFile(kwargs['input'], kwargs['output'], kwargs['encoding'])
 
-    wiki_template = env.get_template(config.wiki_page_template)
-    rendered_tempalte = wiki_template.render(
-        navbar_items=navbar_items,
-        header_link=config.index_page,
-        popular_articles=top_x_popular_articles,
+    generate_page(
+        articles,
+        config.wiki_page_template,
+        config.wiki_page,
         wiki_html=read_file_content(config.wiki_page),
     )
-    with open(config.wiki_page, 'w') as f:
-        f.write(rendered_tempalte)
-
-    logging.info(f'Generated and rendered {config.wiki_page}!')
 
 
 def generate_article_categories_pages(_articles):
