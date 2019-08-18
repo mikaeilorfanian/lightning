@@ -1,6 +1,10 @@
 import dataclasses
+import logging
 import sys
 from typing import List
+
+
+logging.basicConfig(level=logging.INFO)
 
 
 @dataclasses.dataclass
@@ -43,6 +47,8 @@ class Config:
             site_url = self.ROOT_BLOG_URL_LOCAL
 
         self.blog_root_url = site_url
+
+        logging.info(f'Root URL: {self.blog_root_url}')
 
 
 config = Config(sys.argv)
