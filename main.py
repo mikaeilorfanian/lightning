@@ -114,6 +114,7 @@ def generate_wiki_page(articles: Articles):
     with open(config.wiki_page, 'w') as f:
         f.write(rendered_tempalte)
 
+    logging.info(f'Generated and rendered {config.wiki_page}!')
 
 def generate_technical_articles_page(_articles):
     categories = [
@@ -177,7 +178,8 @@ if __name__ == "__main__":
     articles = Articles(config.RAW_ARTICLES_DIR, config.blog_root_url)
     articles.render_markdown_files()
 
-    logging.info('Rendered Markdown articles to HTML!')
+    logging.info('Converted Markdown articles to HTML!')
+    logging.info('---------- Rendering Blog ----------')
 
     generate_home_page(articles)
     generate_page(articles, config.about_page_template, config.about_page)
