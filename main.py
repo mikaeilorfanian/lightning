@@ -134,8 +134,8 @@ def generate_article_categories_pages(_articles):
         articles_popular = _articles.get_top_articles_by_category_and_sorted_by_attribute(
             'popularity', category.name
         )
-        technical_articles_template = env.get_template('articles-category-template.html')
-        rendered_tempalte = technical_articles_template.render(
+        template = env.get_template('articles-category-template.html')
+        rendered_tempalte = template.render(
             navbar_items=navbar_items,
             technical_articles=articles_chronological,
             featured_article=_articles.get_featured_article(category.name),
