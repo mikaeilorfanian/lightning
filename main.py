@@ -113,7 +113,8 @@ def generate_wiki_page(articles: Articles):
 
     logging.info(f'Generated and rendered {config.wiki_page}!')
 
-def generate_technical_articles_page(_articles):
+
+def generate_article_categories_pages(_articles):
     categories = [
         ArticleCategory(
             'technical',
@@ -186,5 +187,5 @@ if __name__ == "__main__":
     generate_page(articles, config.about_page_template, config.about_page)
     generate_page(articles, config.projects_page_template, config.projects_page)
     generate_wiki_page(articles)
-    generate_technical_articles_page(articles)
+    generate_article_categories_pages(articles)
     generate_page_for_each_article(articles)
