@@ -184,6 +184,7 @@ if __name__ == "__main__":
 
     generate_home_page(articles)
     generate_page(articles, config.about_page_template, config.about_page)
+    generate_page(articles, config.projects_page_template, config.projects_page)
     generate_wiki_page(articles)
     generate_technical_articles_page(articles)
     generate_page_for_each_article(articles)

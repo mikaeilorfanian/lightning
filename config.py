@@ -21,12 +21,14 @@ class Config:
     home_page_template: str = 'home-template.html'
     about_page_template: str = 'about-template.html'
     wiki_page_template: str = 'wiki-template.html'
+    projects_page_template: str = 'projects-template.html'
 
     blog_root_url: str = ''
 
     wiki_page: str = 'wiki.html'
     index_page: str = 'index.html'
     about_page: str = 'about.html'
+    projects_page: str = 'projects.html'
 
     wiki_page_md: str = 'wiki.md'
 
