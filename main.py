@@ -27,6 +27,7 @@ def generate_navbar_items():
         NavbarItem('Wiki', 'wiki', root_path),
         NavbarItem('Philosophy', 'philosophy-articles', article_category_path),
         NavbarItem('Technical', 'technical-articles', article_category_path),
+        NavbarItem('Projects', 'projects', root_path),
         NavbarItem('About', 'about', root_path),
     )
 
@@ -79,16 +80,17 @@ def generate_home_page(articles: Articles):
         f.write(rendered_tempalte)
 
 
-def generate_about_page(articles: Articles):
-    popular_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
-        sorting_attributes.popularity, top_x=config.TOP_X_ARTICLES
+def generate_page(articles: Articles, template_filename: str, page_output_filename: str):
+    template = env.get_template(template_filename)
+    rendered_tempalte = template.render(
+        navbar_items=navbar_items,
+        header_link=config.index_page,
+        popular_articles=top_x_popular_articles,
     )
-    about_template = env.get_template(config.about_page_template)
-    rendered_tempalte = about_template.render(
-        navbar_items=navbar_items, header_link=config.index_page, popular_articles=popular_articles
-    )
-    with open(config.about_page, 'w') as f:
+    with open(page_output_filename, 'w') as f:
         f.write(rendered_tempalte)
+
+    logging.info(f'Generated and rendered {page_output_filename}!')
 
 
 def generate_wiki_page(articles: Articles):
@@ -178,7 +180,7 @@ if __name__ == "__main__":
     logging.info('Rendered Markdown articles to HTML!')
 
     generate_home_page(articles)
-    generate_about_page(articles)
+    generate_page(articles, config.about_page_template, config.about_page)
     generate_wiki_page(articles)
     generate_technical_articles_page(articles)
     generate_articles_pages(articles)
