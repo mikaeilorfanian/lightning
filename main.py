@@ -15,6 +15,16 @@ from utils import read_file_content
 from wiki import wiki_url_builder
 
 
+@dataclasses.dataclass
+class Category:
+    technical: str = 'technical'
+    philosophy: str = 'philosophy'
+    scifi_book: str = 'scifi-documentary'
+
+
+categories = Category()
+
+
 def generate_navbar_items():
     '''
     To add a navbar item (button + link), create a NavbarItem instance here.
@@ -24,24 +34,16 @@ def generate_navbar_items():
 
     return (
         NavbarItem('Home', 'index', root_path),
-        NavbarItem('Wiki', 'wiki', root_path),
         NavbarItem('Philosophy', 'philosophy-articles', article_category_path),
         NavbarItem('Technical', 'technical-articles', article_category_path),
+        NavbarItem('Software Dev in 2040', categories.scifi_book, article_category_path),
+        NavbarItem('Wiki', 'wiki', root_path),
         NavbarItem('Projects', 'projects', root_path),
         NavbarItem('About', 'about', root_path),
     )
 
 
 navbar_items = generate_navbar_items()
-
-
-@dataclasses.dataclass
-class Category:
-    technical: str = 'technical'
-    philosophy: str = 'philosophy'
-
-
-categories = Category()
 
 
 @dataclasses.dataclass
@@ -61,6 +63,11 @@ def generate_home_page(articles: Articles):
     )
     coder_card = HomeCard(title='Top 1% Coder', articles=technical_articles)
 
+    scifi_book_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
+    sorting_attributes.pub_date, categories.scifi_book
+    )
+    scifi_book_card = HomeCard(title='Software Dev in 2040', articles=scifi_book_articles)
+
     philosophy_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
         sorting_attributes.pub_date, categories.philosophy
     )
@@ -72,7 +79,7 @@ def generate_home_page(articles: Articles):
     home_template = env.get_template(config.home_page_template)
     rendered_tempalte = home_template.render(
         navbar_items=navbar_items,
-        home_cards=[coder_card, thinker_card],
+        home_cards=[coder_card, scifi_book_card, thinker_card],
         header_link=config.index_page,
         popular_articles=popular_articles,
     )
@@ -112,7 +119,7 @@ def generate_wiki_page(articles: Articles):
     )
 
 
-def generate_article_categories_pages(_articles):
+def generate_article_categories_pages(_articles: Articles):
     categories = [
         ArticleCategory(
             'technical',
@@ -126,6 +133,12 @@ def generate_article_categories_pages(_articles):
             'philosophy-articles',
             config.FINAL_PAGES_DIR,
         ),
+        ArticleCategory(
+            'scifi-documentary',
+            'Software in 2040',
+            'scifi-documentary',
+            config.FINAL_PAGES_DIR,
+        )
     ]
     for category in categories:
         articles_chronological = _articles.get_top_articles_by_category_and_sorted_by_attribute(
