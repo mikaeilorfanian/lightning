@@ -173,6 +173,8 @@ def generate_page_for_each_article(articles):
         with html_page.open('w', encoding='utf-8') as f:
             f.write(rendered_tempalte)
 
+        logging.info(f'Rendered {html_page}.')
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
