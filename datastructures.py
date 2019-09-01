@@ -1,6 +1,7 @@
 import copy
 from dataclasses import dataclass
 from datetime import datetime
+import os
 from pathlib import Path
 from typing import List
 
@@ -100,7 +101,12 @@ class Articles:
                 encoding='utf-8',
             )
             md = markdown.Markdown(**kwargs)
+
             md.convertFile(kwargs['input'], kwargs['output'], kwargs['encoding'])
+
+            if md.Meta.get('publish', True) is not True:
+                os.remove(out_file)
+                continue
 
             self.summaries.append(
                 ArticleSummary(
@@ -115,7 +121,7 @@ class Articles:
                     source_file=in_file,
                     output_file=out_file,
                     featured=self.is_article_featured(md.Meta),
-                )
+                ) 
             )
 
     def get_articles_by_category(self, category: str = None):
