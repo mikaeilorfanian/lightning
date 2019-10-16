@@ -176,14 +176,12 @@ def generate_page_for_each_article(articles):
         logging.info(f'Rendered {html_page}.')
 
 
-def generate_site():
-    logging.basicConfig(level=logging.INFO)
-
+if __name__ == "__main__":
     env = Environment(
         loader=FileSystemLoader(config.templates_folder),
         autoescape=select_autoescape(['html', 'xml']),
     )
-
+    logging.basicConfig(level=logging.INFO)
     logging.info('Environment setup complete!')
 
     articles = Articles(config.RAW_ARTICLES_DIR, config.blog_root_url)
@@ -202,8 +200,3 @@ def generate_site():
     generate_wiki_page(articles)
     generate_article_categories_pages(articles)
     generate_page_for_each_article(articles)
-
-
-
-if __name__ == "__main__":
-    generate_site()
