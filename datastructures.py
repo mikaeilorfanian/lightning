@@ -121,7 +121,7 @@ class Articles:
                     source_file=in_file,
                     output_file=out_file,
                     featured=self.is_article_featured(md.Meta),
-                ) 
+                )
             )
 
     def get_articles_by_category(self, category: str = None):

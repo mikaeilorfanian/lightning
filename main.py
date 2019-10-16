@@ -64,7 +64,7 @@ def generate_home_page(articles: Articles):
     coder_card = HomeCard(title='Top 1% Coder', articles=technical_articles)
 
     scifi_book_articles = articles.get_top_articles_by_category_and_sorted_by_attribute(
-    sorting_attributes.pub_date, categories.scifi_book
+        sorting_attributes.pub_date, categories.scifi_book
     )
     scifi_book_card = HomeCard(title='Software Dev in 2040', articles=scifi_book_articles)
 
@@ -134,11 +134,8 @@ def generate_article_categories_pages(_articles: Articles):
             config.FINAL_PAGES_DIR,
         ),
         ArticleCategory(
-            'scifi-documentary',
-            'Software in 2040',
-            'scifi-documentary',
-            config.FINAL_PAGES_DIR,
-        )
+            'scifi-documentary', 'Software in 2040', 'scifi-documentary', config.FINAL_PAGES_DIR
+        ),
     ]
     for category in categories:
         articles_chronological = _articles.get_top_articles_by_category_and_sorted_by_attribute(
