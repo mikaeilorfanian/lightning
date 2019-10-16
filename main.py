@@ -176,7 +176,7 @@ def generate_page_for_each_article(articles):
         logging.info(f'Rendered {html_page}.')
 
 
-if __name__ == "__main__":
+def generate_site():
     logging.basicConfig(level=logging.INFO)
 
     env = Environment(
@@ -202,3 +202,8 @@ if __name__ == "__main__":
     generate_wiki_page(articles)
     generate_article_categories_pages(articles)
     generate_page_for_each_article(articles)
+
+
+
+if __name__ == "__main__":
+    generate_site()
