@@ -14,7 +14,7 @@ class Config:
 
     TOP_X_ARTICLES: int = 5
 
-    FINAL_PAGES_DIR: str = 'pages'
+    FINAL_PAGES_DIR: str = 'writings'
     RAW_ARTICLES_DIR: str = 'articles'
 
     ROOT_BLOG_URL_LOCAL: str = 'file:///C:/Users/mokt/dev/blog'
